@@ -1,0 +1,19 @@
+{
+  "name": "project-phosphorus-api",
+  "version": "1.0.0",
+  "description": "RESTful API back end for project phosphorus",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sfdeloach/project-phosphorus-api.git"
+  },
+  "author": "sfdeloach",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sfdeloach/project-phosphorus-api/issues"
+  },
+  "homepage": "https://github.com/sfdeloach/project-phosphorus-api#readme"
+}
