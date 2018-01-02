@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/sfdeloach/project-phosphorus-api/issues"
   },
-  "homepage": "https://github.com/sfdeloach/project-phosphorus-api#readme"
+  "homepage": "https://github.com/sfdeloach/project-phosphorus-api#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mongodb": "^3.0.1"
+  }
 }
