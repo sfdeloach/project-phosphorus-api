@@ -9,69 +9,78 @@ const dbName = 'phosphorus';
 const collectionName = 'events';
 const url = 'mongodb://localhost:27017';
 
-// TODO remove after testing:
-const testArray = [
-  { name:
-    { first: 'Bob',
-      last: "Harrison"
-    },
-    id: 100600
-  },
-  { name:
-    { first: 'Terry',
-      last: "Young"
-    },
-    id: 100601
-  }
-];
+const accessCodes = {
+    alpha: '8uJ4eC1s^0iB5bR0',
+    bravo: '6*3gdsaFhsT8fQux',
+    charlie: 'n6Dk9Wv1Pc9Ym3Z&',
+    delta: 'eD9k4#adsa1sXsQs'
+};
 
 app.use(bodyParser.json({
-  limit: '20mb'
+    limit: '20mb'
 }));
 
-app.get('/api/events', (req, res) => {
-  console.log(`${new Date()} - GET /api/events request received`);
+app.get('/api/events', function (req, res) {
+    "use strict";
+    console.log(`${new Date()} - GET /api/events request received`);
 
-  MongoClient.connect(url, (err, client) => {
-    assert.equal(null, err);
-    const db = client.db(dbName);
+    MongoClient.connect(url, function (err, client) {
+        assert.equal(null, err);
+        const db = client.db(dbName);
 
-    db.collection('events').find().toArray(function(err, result) {
-      if (err) throw err;
-      res.json(result);
+        db.collection(collectionName).find().toArray(function (err, result) {
+            if (err) {
+                throw err;
+            }
+            res.json(result);
+        });
     });
-  });
 });
 
-app.post('/api/events', (req, res) => {
-  const payload = req.body
+app.post('/api/events', function (req, res) {
+    "use strict";
+    const passcode = req.body.passcode;
+    const payload = req.body.payload;
 
-  console.log(`${new Date()} - POST /api/events request received`);
-  console.log(`${new Date()} - ${payload.length} documents in the payload`);
+    console.log(`${new Date()} - POST /api/events request received`);
+    console.log(`${new Date()} - ${payload.length} documents in the payload`);
 
-  MongoClient.connect(url, (err, client) => {
-    if (err) {
-      console.log(`${new Date()} - Unable to connect to database`);
-      res.json({
-        "error": true,
-        "message": 'Unable to connect to database',
-        "lines": 0
-      });
-    } else {
-      console.log(`${new Date()} - Successful connection to db ${dbName}`);
-      const db = client.db(dbName);
+    if (passcode === accessCodes.alpha) {
+        console.log(`${new Date()} - Proper passcode was provided, access to API granted`);
+        MongoClient.connect(url, function (err, client) {
+            if (err) {
+                const noConnectMessage = `Unable to connect to database`;
+                console.log(`${new Date()} - ` + noConnectMessage);
+                res.json({
+                    "error": true,
+                    "message": noConnectMessage,
+                    "lines": 0
+                });
+            } else {
+                console.log(`${new Date()} - Successful connection to db ${dbName}`);
+                const db = client.db(dbName);
 
-      db.collection('events').insertMany(payload, (err, result) => {
-        assert.equal(null, err);
-        console.log(`${new Date()} - ${result.insertedCount} documents added to ${collectionName}`);
-        res.json({
-          "error": false,
-          "message": `SERVER: ${result.insertedCount} documents received`,
-          "lines": `${result.insertedCount}`
+                db.collection(collectionName).insertMany(payload, function (err, result) {
+                    assert.equal(null, err);
+                    const successInsertMessage = `${result.insertedCount} documents added to ${collectionName}`;
+                    console.log(`${new Date()} - ` + successInsertMessage);
+                    res.json({
+                        "error": false,
+                        "message": successInsertMessage,
+                        "lines": `${result.insertedCount}`
+                    });
+                });
+            }
         });
-      });
+    } else {
+        const badPasscodeMessage = `Improper passcode provided, access to API denied`;
+        console.log(`${new Date()} - ` + badPasscodeMessage);
+        res.json({
+            "error": true,
+            "message": badPasscodeMessage,
+            "lines": 0
+        });
     }
-  });
 
 });
 
