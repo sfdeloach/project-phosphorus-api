@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongodb = require('mongodb');
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 
@@ -26,13 +27,14 @@ app.use(bodyParser.json({
 // Allow CORS on ExpressJS
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   next();
 });
 
 app.get('/api/officers', function(req, res) {
   "use strict";
-  console.log(`${new Date()} - GET /api/squads request received`);
+  console.log(`${new Date()} - GET /api/officers request received`);
 
   MongoClient.connect(url, function(err, client) {
     if (err) {
@@ -93,6 +95,39 @@ app.post('/api/officers/new', function(req, res) {
       });
     }
   });
+});
+
+app.delete('/api/officers/:id', function(req, res){
+  "use strict";
+  const id = req.params.id;
+  console.log(`${new Date()} - DELETE /api/officers/${id} request received`);
+
+  MongoClient.connect(url, function(err, client) {
+    if (err) {
+      console.log(`${new Date()} - ` + noConnectMessage);
+      res.json({
+        "error": true,
+        "message": noConnectMessage,
+        "lines": 0
+      });
+    } else {
+      console.log(`${new Date()} - Successful connection to db ${dbName}`);
+      const db = client.db(dbName);
+
+      db.collection(officersCollection).deleteOne({_id: new mongodb.ObjectID(id)}, function(err, result) {
+        assert.equal(null, err);
+        const successDeleteMessage = `${result.deletedCount} officer deleted from ${officersCollection}`;
+        console.log(`${new Date()} - ` + successDeleteMessage);
+        res.json({
+          "error": false,
+          "message": successDeleteMessage,
+          "lines": `${result.deletedCount}`
+        });
+      });
+    }
+  });
+
+
 });
 
 app.get('/api/events', function(req, res) {
