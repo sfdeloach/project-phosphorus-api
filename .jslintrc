@@ -1,5 +1,6 @@
 {
   "node": true,
   "es6": true,
-  "fart": true
+  "fart": true,
+  "white": true
 }
