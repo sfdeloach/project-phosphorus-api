@@ -38,9 +38,9 @@ app.get('/api/episodes', function (req, res) {
       console.log(`${new Date()} - ` + noConnectMessage);
       console.log(err);
       res.json({
-        "error": true,
+        "isOkay": false,
         "message": noConnectMessage,
-        "lines": 0
+        "num": 0
       });
     } else {
       const db = client.db(dbName);
@@ -49,9 +49,9 @@ app.get('/api/episodes', function (req, res) {
           console.log(`${new Date()} - ` + dbErrorMessage);
           console.log(err);
           res.json({
-            "error": true,
+            "isOkay": false,
             "message": dbErrorMessage,
-            "lines": 0
+            "num": 0
           });
         } else {
           res.json(result);
@@ -61,44 +61,70 @@ app.get('/api/episodes', function (req, res) {
   });
 });
 
-app.post('/api/episodes', function (req, res) {
+app.post('/api/episodes/new', function (req, res) {
   "use strict";
-  const episodes = req.body.episodes;
+  const episode = req.body.episode;
 
-  console.log(`${new Date()} - POST /api/episodes request received`);
-  console.log(`${new Date()} - ${episodes.length} documents in the payload`);
+  console.log(`${new Date()} - POST /api/episode/new request received`);
 
   MongoClient.connect(url, function (err, client) {
     if (err) {
       console.log(`${new Date()} - ` + noConnectMessage);
       res.json({
-        "error": true,
+        "isOkay": false,
         "message": noConnectMessage,
-        "lines": 0
+        "num": 0
       });
     } else {
       console.log(`${new Date()} - Successful connection to db ${dbName}`);
       const db = client.db(dbName);
 
-      db.collection(episodesCollection).insertMany(episodes, function (err, result) {
+      db.collection(episodesCollection).insert(episode, function (err, result) {
         assert.equal(null, err);
-        const successInsertMessage = `${result.insertedCount} documents added to ${episodesCollection}`;
+        const successInsertMessage = `Event ${episode.call.eventNbr} added`;
         console.log(`${new Date()} - ` + successInsertMessage);
         res.json({
-          "error": false,
+          "isOkay": true,
           "message": successInsertMessage,
-          "lines": `${result.insertedCount}`
+          "num": `${result.insertedCount}`
         });
       });
     }
   });
 });
 
-// use upsert for this update API call
+// update
 app.put('/api/episodes/:id', function (req, res) {
+  "use strict";
   const id = req.params.id;
-  res.json({
-    "message": `PUT request received for ${id}`
+  const episode = req.body.episode;
+  console.log(`${new Date()} - PUT /api/episodes/${id} request received`);
+
+  MongoClient.connect(url, function (err, client) {
+    if (err) {
+      console.log(`${new Date()} - ` + noConnectMessage);
+      res.json({
+        "isOkay": false,
+        "message": noConnectMessage,
+        "num": 0
+      });
+    } else {
+      console.log(`${new Date()} - Successful connection to db ${dbName}`);
+      const db = client.db(dbName);
+
+      db.collection(episodesCollection).deleteOne({ _id: new mongodb.ObjectID(id) }, function (err, result) {
+        db.collection(episodesCollection).insert(episode, function (err, result) {
+          assert.equal(null, err);
+          const successInsertMessage = `Event ${episode.call.eventNbr} updated`;
+          console.log(`${new Date()} - ` + successInsertMessage);
+          res.json({
+            "isOkay": true,
+            "message": successInsertMessage,
+            "num": 1
+          });
+        });
+      });
+    }
   });
 });
 
@@ -113,9 +139,9 @@ app.get('/api/officers', function (req, res) {
       console.log(`${new Date()} - ` + noConnectMessage);
       console.log(err);
       res.json({
-        "error": true,
+        "isOkay": false,
         "message": noConnectMessage,
-        "lines": 0
+        "num": 0
       });
     } else {
       const db = client.db(dbName);
@@ -124,9 +150,9 @@ app.get('/api/officers', function (req, res) {
           console.log(`${new Date()} - ` + dbErrorMessage);
           console.log(err);
           res.json({
-            "error": true,
+            "isOkay": false,
             "message": dbErrorMessage,
-            "lines": 0
+            "num": 0
           });
         } else {
           res.json(result);
@@ -180,9 +206,9 @@ app.post('/api/officers/new', function (req, res) {
     if (err) {
       console.log(`${new Date()} - ` + noConnectMessage);
       res.json({
-        "error": true,
+        "isOkay": false,
         "message": noConnectMessage,
-        "lines": 0
+        "num": 0
       });
     } else {
       console.log(`${new Date()} - Successful connection to db ${dbName}`);
@@ -193,9 +219,9 @@ app.post('/api/officers/new', function (req, res) {
         const successInsertMessage = `${result.insertedCount} officer added to ${officersCollection}`;
         console.log(`${new Date()} - ` + successInsertMessage);
         res.json({
-          "error": false,
+          "isOkay": true,
           "message": successInsertMessage,
-          "lines": `${result.insertedCount}`
+          "num": `${result.insertedCount}`
         });
       });
     }
@@ -214,9 +240,9 @@ app.put('/api/officers/:id', function (req, res) {
     if (err) {
       console.log(`${new Date()} - ` + noConnectMessage);
       res.json({
-        "error": true,
+        "isOkay": false,
         "message": noConnectMessage,
-        "lines": 0
+        "num": 0
       });
     } else {
       const db = client.db(dbName);
@@ -230,9 +256,9 @@ app.put('/api/officers/:id', function (req, res) {
             const successUpdateMessage = `Successful update of officer with id: ${updateOfc._id}`;
             console.log(`${new Date()} - ` + successUpdateMessage);
             res.json({
-              "error": false,
+              "isOkay": true,
               "message": successUpdateMessage,
-              "lines": 1
+              "num": 1
             });
           }
         }
@@ -250,9 +276,9 @@ app.delete('/api/officers/:id', function (req, res) {
     if (err) {
       console.log(`${new Date()} - ` + noConnectMessage);
       res.json({
-        "error": true,
+        "isOkay": false,
         "message": noConnectMessage,
-        "lines": 0
+        "num": 0
       });
     } else {
       console.log(`${new Date()} - Successful connection to db ${dbName}`);
@@ -263,13 +289,15 @@ app.delete('/api/officers/:id', function (req, res) {
         const successDeleteMessage = `${result.deletedCount} officer deleted from ${officersCollection}`;
         console.log(`${new Date()} - ` + successDeleteMessage);
         res.json({
-          "error": false,
+          "isOkay": true,
           "message": successDeleteMessage,
-          "lines": `${result.deletedCount}`
+          "num": `${result.deletedCount}`
+
         });
       });
     }
   });
 });
 
-app.listen(3000, () => console.log(`${new Date()} - Phosphorus API listening on port 3000!`));
+app.listen(3000, () => console.log(`
+                          $ { new Date() } - Phosphorus API listening on port 3000!`));
