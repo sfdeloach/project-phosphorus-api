@@ -1,0 +1,17 @@
+/* see http://jshint.com/docs/options/ */
+
+{
+  "esversion": 6,
+  "strict": true,
+  "node": true,
+  "newcap": true,
+  "noempty": true,
+  "nonew": true,
+  "nomen": true,
+  "onevar": false,
+  "plusplus": false,
+  "sub": false,
+  "trailing": true,
+  "white": true,
+  "indent": 2
+}
