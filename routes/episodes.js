@@ -13,16 +13,7 @@ router.use(function timeLog (req, res, next) {
   next();
 });
 
-// connect().then(checkForError)
-//   .then(executeRequest)
-//   .then(checkForError)
-//   .then(provideResponse)
-
-// let checkForError = () => {};
-
 router.get('/', function(req, res) {
-  'use strict';
-
   MongoClient.connect(url, function(err, client) {
     if (err) {
       console.log(`${new Date()} - ` + noConnectMessage);
@@ -52,7 +43,6 @@ router.get('/', function(req, res) {
 });
 
 router.post('/new-one', function(req, res) {
-  'use strict';
   const episode = req.body.episode;
 
   MongoClient.connect(url, function(err, client) {
@@ -81,7 +71,6 @@ router.post('/new-one', function(req, res) {
 });
 
 router.post('/new-many', function(req, res) {
-  'use strict';
   const episodes = req.body.episodes;
 
   MongoClient.connect(url, function(err, client) {
@@ -111,7 +100,6 @@ router.post('/new-many', function(req, res) {
 });
 
 router.put('/:id', function(req, res) {
-  'use strict';
   const id = req.params.id;
   const episode = req.body.episode;
 
