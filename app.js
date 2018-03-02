@@ -6,7 +6,8 @@ const assert = require('assert');
 
 const app = express();
 
-const episodes = require('./routes/episodes');
+const Result = require('./api/models/result');
+const episodes = require('./api/routes/episodes');
 
 const dbName = 'phosphorus';
 const officersCollection = 'officers';
