@@ -20,7 +20,7 @@ app.use(bodyParser.json({
 }));
 
 // Allow CORS on ExpressJS
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   'use strict';
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods',
@@ -37,11 +37,11 @@ app.use('/api/episodes', episodes);
 
 // Officer API starts here /////////////////////////////////////////////////////
 
-app.get('/api/officers', function(req, res) {
+app.get('/api/officers', function (req, res) {
   'use strict';
   console.log(`${new Date()} - GET /api/officers request received`);
 
-  MongoClient.connect(url, function(err, client) {
+  MongoClient.connect(url, function (err, client) {
     if (err) {
       console.log(`${new Date()} - ` + noConnectMessage);
       console.log(err);
@@ -52,7 +52,7 @@ app.get('/api/officers', function(req, res) {
       });
     } else {
       const db = client.db(dbName);
-      db.collection(officersCollection).find().toArray(function(err, result) {
+      db.collection(officersCollection).find().toArray(function (err, result) {
         if (err) {
           console.log(`${new Date()} - ` + dbErrorMessage);
           console.log(err);
@@ -69,7 +69,7 @@ app.get('/api/officers', function(req, res) {
   });
 });
 
-app.get('/api/officers/:id', function(req, res) {
+app.get('/api/officers/:id', function (req, res) {
   'use strict';
   const id = req.params.id;
   console.log(`${new Date()} - GET /api/officers/${id} request received`);
@@ -80,7 +80,7 @@ app.get('/api/officers/:id', function(req, res) {
     }
   };
 
-  MongoClient.connect(url, function(err, client) {
+  MongoClient.connect(url, function (err, client) {
     if (err) {
       console.error(err);
       res.json(errorOfc);
@@ -90,7 +90,7 @@ app.get('/api/officers/:id', function(req, res) {
       console.log(`${new Date()} - Database client set to '${dbName}'`);
       db.collection(officersCollection).findOne({
         _id: new mongodb.ObjectID(id)
-      }, function(err, result) {
+      }, function (err, result) {
         if (err) {
           console.log(
             `${new Date()} - An error occurred during the 'findOne()' operation`
@@ -107,13 +107,13 @@ app.get('/api/officers/:id', function(req, res) {
 
 });
 
-app.post('/api/officers/new', function(req, res) {
+app.post('/api/officers/new', function (req, res) {
   'use strict';
   console.log(`${new Date()} - POST /api/officers/new request received`);
 
   const newOfficer = req.body.officer;
 
-  MongoClient.connect(url, function(err, client) {
+  MongoClient.connect(url, function (err, client) {
     if (err) {
       console.log(`${new Date()} - ` + noConnectMessage);
       res.json({
@@ -126,10 +126,10 @@ app.post('/api/officers/new', function(req, res) {
       const db = client.db(dbName);
 
       db.collection(officersCollection).insert(newOfficer,
-        function(err, result) {
+        function (err, result) {
           assert.equal(null, err);
           const successInsertMessage =
-          `${result.insertedCount} officer added to ${officersCollection}`;
+            `${result.insertedCount} officer added to ${officersCollection}`;
           console.log(`${new Date()} - ` + successInsertMessage);
           res.json({
             'isOkay': true,
@@ -141,7 +141,7 @@ app.post('/api/officers/new', function(req, res) {
   });
 });
 
-app.put('/api/officers/:id', function(req, res) {
+app.put('/api/officers/:id', function (req, res) {
   'use strict';
   const id = req.params.id;
   console.log(`${new Date()} - PUT /api/officers/${id} request received`);
@@ -149,7 +149,7 @@ app.put('/api/officers/:id', function(req, res) {
   const updateOfc = req.body.officer;
   delete updateOfc._id; // must remove _id field or replaceOne() will fail
 
-  MongoClient.connect(url, function(err, client) {
+  MongoClient.connect(url, function (err, client) {
     if (err) {
       console.log(`${new Date()} - ` + noConnectMessage);
       res.json({
@@ -163,7 +163,7 @@ app.put('/api/officers/:id', function(req, res) {
       db.collection(officersCollection).replaceOne({
           _id: new mongodb.ObjectID(id)
         }, updateOfc,
-        function(err, result) {
+        function (err, result) {
           if (err) {
             const errMessage = 'Update failed';
             console.error(errMessage);
@@ -189,12 +189,12 @@ app.put('/api/officers/:id', function(req, res) {
   });
 });
 
-app.delete('/api/officers/:id', function(req, res) {
+app.delete('/api/officers/:id', function (req, res) {
   'use strict';
   const id = req.params.id;
   console.log(`${new Date()} - DELETE /api/officers/${id} request received`);
 
-  MongoClient.connect(url, function(err, client) {
+  MongoClient.connect(url, function (err, client) {
     if (err) {
       console.log(`${new Date()} - ` + noConnectMessage);
       res.json({
@@ -208,7 +208,7 @@ app.delete('/api/officers/:id', function(req, res) {
 
       db.collection(officersCollection).deleteOne({
         _id: new mongodb.ObjectID(id)
-      }, function(err, result) {
+      }, function (err, result) {
         assert.equal(null, err);
         const successDeleteMessage =
           `${result.deletedCount} officer deleted from ${officersCollection}`;
