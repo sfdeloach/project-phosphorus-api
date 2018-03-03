@@ -6,8 +6,8 @@ const assert = require('assert');
 
 const app = express();
 
-const Result = require('./api/models/result');
-const episodes = require('./api/routes/episodes');
+const episodes = require('./api/routes/episodes.route');
+const officers = require('./api/routes/officers.route');
 
 const dbName = 'phosphorus';
 const officersCollection = 'officers';
@@ -228,5 +228,5 @@ app.delete('/api/officers/:id', function (req, res) {
 app.listen(3000,
   () => {
     'use strict';
-    console.log(`${new Date()} - Phosphorus API listening on port 3000!`);
+    console.log(`${new Date().toISOString()} - Phosphorus API listening on port 3000!`);
   });
