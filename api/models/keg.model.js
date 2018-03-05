@@ -10,12 +10,8 @@ class Keg {
     this.ObjectID = require('mongodb').ObjectID;
   }
 
-  getObjectID() {
-    return { '_id': this.ObjectID(this.documentID) };
-  }
-
   // accepts either a single ID or an array of IDs
-  getObjectIDs() {
+  formObjectIdQuery() {
     let mongoObjectIDs = [];
 
     if (Array.isArray(this.documentIDs)) {
@@ -26,7 +22,7 @@ class Keg {
       mongoObjectIDs.push(this.ObjectID(this.documentIDs));
     }
 
-    return { '_id': { $in: mongoObjectIDs } };
+    return { '_id': { $in: mongoObjectIDs }};
   }
 }
 

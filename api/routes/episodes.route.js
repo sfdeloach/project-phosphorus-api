@@ -7,8 +7,7 @@ const log = require('../assets/log.utility');
 const Keg = require('../models/keg.model');
 let keg = new Keg('episodes');
 
-router.use(function timeLog(req, res, next) {
-  'use strict';
+router.use((req, res, next) => {
   log.request(req);
   next();
 });
@@ -18,7 +17,7 @@ router.get('/', (req, res) => {
   keg.query = {};
   command.connect(keg)
     .then(keg => command.find(keg))
-    .then(keg => res.json(keg.queryResults))
+    .then(keg => res.json(keg.findResult))
     .catch(err => {
       log.error(err);
       res.json(err);
@@ -30,7 +29,7 @@ router.put('/query-find', (req, res) => {
   keg.query = req.body.query || {};
   command.connect(keg)
     .then(keg => command.find(keg))
-    .then(keg => res.json(keg.queryResults))
+    .then(keg => res.json(keg.findResult))
     .catch(err => {
       log.error(err);
       res.json(err);
@@ -42,7 +41,7 @@ router.post('/insert', (req, res) => {
   keg.doc = req.body.episode;
   command.connect(keg)
     .then(keg => command.insert(keg))
-    .then(keg => res.json(keg.result))
+    .then(keg => res.json(keg.insertResult))
     .catch(err => {
       log.error(err);
       res.json(err);
@@ -54,7 +53,7 @@ router.post('/insert-many', (req, res) => {
   keg.documents = req.body.episodes;
   command.connect(keg)
     .then(keg => command.insertMany(keg))
-    .then(keg => res.json(keg.result))
+    .then(keg => res.json(keg.insertManyResult))
     .catch(err => {
       log.error(err);
       res.json(err);
@@ -66,7 +65,7 @@ router.put('/query-remove', (req, res) => {
   keg.query = req.body.query || {};
   command.connect(keg)
     .then(keg => command.remove(keg))
-    .then(keg => res.json(keg.queryResults))
+    .then(keg => res.json(keg.removeResult))
     .catch(err => {
       log.error(err);
       res.json(err);
@@ -75,13 +74,17 @@ router.put('/query-remove', (req, res) => {
 
 // remove one episode
 router.delete('/deleteOne/:id', (req, res) => {
-  keg.documentID = req.params.id;
+  keg.documentIDs = req.params.id;
   command.connect(keg)
     .then(keg => command.deleteOne(keg))
-    .then(keg => res.json(keg.result))
+    .then(keg => res.json(keg.deleteOneResult))
     .catch(err => {
       log.error(err);
-      res.json(err);
+      res.json({
+        'name': 'deleteOneResult',
+        'error': true,
+        'message': `{ _id: ${keg.documentIDs} } is not in the database`
+      });
     });
 });
 
@@ -92,10 +95,22 @@ router.put('/replaceOne/:id', (req, res) => {
   command.connect(keg)
     .then(keg => command.deleteOne(keg))
     .then(keg => command.insert(keg))
-    .then(keg => res.json(keg.result))
+    .then(keg => res.json([
+      keg.deleteOneResult,
+      keg.insertResult
+    ]))
     .catch(err => {
       log.error(err);
-      res.json(err);
+      res.json([{
+        'name': 'deleteOneResult',
+        'error': true,
+        'message': `{ _id: ${keg.documentIDs} } is not in the database`
+      }, {
+        'name': 'insertResult',
+        'error': true,
+        'message': 'insert command failed due to deleteOne()'
+      }
+      ]);
     });
 });
 

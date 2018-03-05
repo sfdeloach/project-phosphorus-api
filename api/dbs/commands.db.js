@@ -11,7 +11,7 @@ let getCollection = (keg) => {
 
 let convertObjectIDs = (keg) => {
   keg.documentIDs = keg.query._id;
-  keg.query = keg.getObjectIDs();
+  keg.query = keg.formObjectIdQuery();
   return keg;
 };
 
@@ -29,9 +29,9 @@ let dbOperationCommands = {
     return new Promise((resolve, reject) => {
       if (keg.query._id) keg = convertObjectIDs(keg);
       getCollection(keg)
-        .find(keg.query).toArray((err, queryResults) => {
+        .find(keg.query).toArray((err, findResult) => {
           if (err) reject(err);
-          keg.queryResults = queryResults;
+          keg.findResult = findResult;
           resolve(keg);
         });
     });
@@ -39,9 +39,9 @@ let dbOperationCommands = {
   insert: (keg) => {
     return new Promise((resolve, reject) => {
       getCollection(keg)
-        .insert(keg.doc, (err, result) => {
+        .insert(keg.doc, (err, insertResult) => {
           if (err) reject(err);
-          keg.result = result;
+          keg.insertResult = insertResult;
           resolve(keg);
         });
     });
@@ -49,9 +49,9 @@ let dbOperationCommands = {
   insertMany: (keg) => {
     return new Promise((resolve, reject) => {
       getCollection(keg)
-        .insertMany(keg.documents, (err, result) => {
+        .insertMany(keg.documents, (err, insertManyResult) => {
           if (err) reject(err);
-          keg.result = result;
+          keg.insertManyResult = insertManyResult;
           resolve(keg);
         });
     });
@@ -59,13 +59,12 @@ let dbOperationCommands = {
   deleteOne: (keg) => {
     return new Promise((resolve, reject) => {
       getCollection(keg)
-        .deleteOne(keg.getObjectID(), (err, result) => {
+        .deleteOne(keg.formObjectIdQuery(), (err, deleteOneResult) => {
           if (err) reject(err);
-          if (result.result.n === 0) {
-            keg.message = `document with '_id:' ${keg.documentID} not found`;
-            reject(keg);
-          }
-          keg.result = result;
+          keg.deleteOneResult = deleteOneResult;
+          if (deleteOneResult.result.n === 0) reject(
+            new Error(`{ _id: ${keg.documentIDs} } is not in the database`)
+          );
           resolve(keg);
         });
     });
@@ -74,9 +73,9 @@ let dbOperationCommands = {
     return new Promise((resolve, reject) => {
       if (keg.query._id) keg = convertObjectIDs(keg);
       getCollection(keg)
-        .remove(keg.query, (err, queryResults) => {
+        .remove(keg.query, (err, removeResult) => {
           if (err) reject(err);
-          keg.queryResults = queryResults.result;
+          keg.removeResult = removeResult;
           resolve(keg);
         });
     });
