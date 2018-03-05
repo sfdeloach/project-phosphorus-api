@@ -1,52 +1,101 @@
 const express = require('express');
 const router = express.Router();
-const Result = require('../models/result.model');
-const database = require('../dbs/episodes.db');
 
-let ts = () => `${new Date().toISOString()} - `;
-let reqInfo = req => req.method + ' ' + req.baseUrl + req.path;
+const command = require('../dbs/commands.db');
+const log = require('../assets/log.utility');
+
+const Keg = require('../models/keg.model');
+let keg = new Keg('episodes');
 
 router.use(function timeLog(req, res, next) {
   'use strict';
-  console.log(ts() + reqInfo(req));
+  log.request(req);
   next();
 });
 
+// return all episodes
 router.get('/', (req, res) => {
-  let query = {};
-  if (req.body.query) query = req.body.query;
-  database.connect()
-    .then(resolution => database.find(resolution.client, query))
-    .then(resolution => res.json(resolution.result))
+  keg.query = {};
+  command.connect(keg)
+    .then(keg => command.find(keg))
+    .then(keg => res.json(keg.queryResults))
     .catch(err => {
-      console.error(`${new Date().toISOString()} - ${err.message}`);
-      res.json(new Result(err));
+      log.error(err);
+      res.json(err);
     });
 });
 
+// return the results of a query object
+router.put('/query-find', (req, res) => {
+  keg.query = req.body.query || {};
+  command.connect(keg)
+    .then(keg => command.find(keg))
+    .then(keg => res.json(keg.queryResults))
+    .catch(err => {
+      log.error(err);
+      res.json(err);
+    });
+});
+
+// insert one episode
+router.post('/insert', (req, res) => {
+  keg.doc = req.body.episode;
+  command.connect(keg)
+    .then(keg => command.insert(keg))
+    .then(keg => res.json(keg.result))
+    .catch(err => {
+      log.error(err);
+      res.json(err);
+    });
+});
+
+// insert an array of episodes
 router.post('/insert-many', (req, res) => {
-  const episodes = req.body.episodes;
-  database.connect()
-    .then(resolution => database.insertMany(resolution.client, episodes))
-    .then(resolution => res.json(new Result(
-      null, 'episodes created', resolution.result.insertedCount
-    )))
+  keg.documents = req.body.episodes;
+  command.connect(keg)
+    .then(keg => command.insertMany(keg))
+    .then(keg => res.json(keg.result))
     .catch(err => {
-      console.error(err.message);
-      res.json(new Result(err));
+      log.error(err);
+      res.json(err);
     });
 });
 
-router.put('/:id', (req, res) => {
-  const id = req.params.id;
-  const episode = req.body.episode;
-  database.connect()
-    .then(resolution => database.deleteOne(resolution.client, id))
-    .then(resolution => database.insert(resolution.client, episode))
-    .then(resolution => res.json(new Result(null, 'episode updated')))
+// remove episodes matching the provided query
+router.put('/query-remove', (req, res) => {
+  keg.query = req.body.query || {};
+  command.connect(keg)
+    .then(keg => command.remove(keg))
+    .then(keg => res.json(keg.queryResults))
     .catch(err => {
-      console.error(err.message);
-      res.json(new Result(err));
+      log.error(err);
+      res.json(err);
+    });
+});
+
+// remove one episode
+router.delete('/deleteOne/:id', (req, res) => {
+  keg.documentID = req.params.id;
+  command.connect(keg)
+    .then(keg => command.deleteOne(keg))
+    .then(keg => res.json(keg.result))
+    .catch(err => {
+      log.error(err);
+      res.json(err);
+    });
+});
+
+// remove one episode and insert a new episode
+router.put('/replaceOne/:id', (req, res) => {
+  keg.documentID = req.params.id;
+  keg.doc = req.body.episode;
+  command.connect(keg)
+    .then(keg => command.deleteOne(keg))
+    .then(keg => command.insert(keg))
+    .then(keg => res.json(keg.result))
+    .catch(err => {
+      log.error(err);
+      res.json(err);
     });
 });
 
