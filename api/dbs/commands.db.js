@@ -62,9 +62,6 @@ let dbOperationCommands = {
         .deleteOne(keg.formObjectIdQuery(), (err, deleteOneResult) => {
           if (err) reject(err);
           keg.deleteOneResult = deleteOneResult;
-          if (deleteOneResult.result.n === 0) reject(
-            new Error(`{ _id: ${keg.documentIDs} } is not in the database`)
-          );
           resolve(keg);
         });
     });
