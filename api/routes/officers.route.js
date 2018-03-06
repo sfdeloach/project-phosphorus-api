@@ -1,12 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const Result = require('../models/result.model');
-const database = require('../dbs/commands.db');
-const log = require('../assets/log.utility');
 
-router.use(function timeLog(req, res, next) {
-  'use strict';
-  log.request(req);
+const command = require('../dbs/commands.db');
+const logger = require('../assets/log.utility');
+
+const ErrJsonRes = require('../models/error.response.model.js');
+const Keg = require('../models/keg.model');
+let keg;
+
+router.use((req, res, next) => {
+  logger.request(req);
+  keg = new Keg('episodes');
   next();
 });
 
