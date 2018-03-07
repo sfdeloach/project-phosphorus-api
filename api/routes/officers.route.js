@@ -10,7 +10,7 @@ let keg;
 
 router.use((req, res, next) => {
   logger.request(req);
-  keg = new Keg('episodes');
+  keg = new Keg('officers');
   next();
 });
 

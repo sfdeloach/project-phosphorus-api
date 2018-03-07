@@ -15,7 +15,7 @@ router.use((req, res, next) => {
 });
 
 // return all episodes
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
   keg.query = {};
   command.connect(keg)
     .then(keg => command.find(keg))
@@ -89,9 +89,9 @@ router.put('/replace-one', (req, res) => {
   // TODO
 });
 
-// remove one episode and insert a new episode
-// used when the replacement document length does
-// not match original document
+/* remove one episode and insert a new episode
+   used when the replacement document length
+   does not match original document */
 router.put('/delete-one-and-insert/:id', (req, res) => {
   keg.documentID = req.params.id;
   keg.doc = req.body.episode;
