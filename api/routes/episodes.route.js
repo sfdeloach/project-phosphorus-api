@@ -14,55 +14,12 @@ router.use((req, res, next) => {
   next();
 });
 
-// return all episodes
-router.get('/', (req, res) => {
-  keg.query = {};
-  command.connect(keg)
-    .then(keg => command.find(keg))
-    .then(keg => res.json(keg.findResult))
-    .catch(err => {
-      console.error(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
-    });
-});
-
-// return one episode
-router.get('/findOne/:id', (req, res) => {
-  keg.documentIDs = req.params.id;
-  command.connect(keg)
-    .then(keg => command.findOne(keg))
-    .then(keg => res.json(keg.findOneResult))
-    .catch(err => {
-      console.error(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
-    });
-
-});
-
 // return the results of a query object
-router.post('/find', (req, res) => {
+router.get('/find', (req, res) => {
   keg.query = req.body.query || {};
   command.connect(keg)
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
-    .catch(err => {
-      console.error(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
-    });
-});
-
-// insert one episode
-router.post('/insert', (req, res) => {
-  keg.doc = req.body.episode;
-  command.connect(keg)
-    .then(keg => command.insert(keg))
-    .then(keg => res.json(keg.insertResult))
     .catch(err => {
       console.error(err);
       res.json(new ErrJsonRes(
@@ -86,36 +43,11 @@ router.post('/insert-many', (req, res) => {
 });
 
 router.put('/replace-one', (req, res) => {
-  // TODO
-});
-
-/* remove one episode and insert a new episode
-   used when the replacement document length
-   does not match original document */
-router.put('/delete-one-and-insert/:id', (req, res) => {
-  keg.documentID = req.params.id;
-  keg.doc = req.body.episode;
+  keg.query = req.body.query || {};
+  keg.document = req.body.episode;
   command.connect(keg)
-    .then(keg => command.deleteOne(keg))
-    .then(keg => command.insert(keg))
-    .then(keg => res.json([
-      keg.deleteOneResult,
-      keg.insertResult
-    ]))
-    .catch(err => {
-      console.error(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
-    });
-});
-
-// remove one episode
-router.delete('/delete-one/:id', (req, res) => {
-  keg.documentIDs = req.params.id;
-  command.connect(keg)
-    .then(keg => command.deleteOne(keg))
-    .then(keg => res.json(keg.deleteOneResult))
+    .then(keg => command.replaceOne(keg))
+    .then(keg => res.json(keg.replaceOneResult))
     .catch(err => {
       console.error(err);
       res.json(new ErrJsonRes(
@@ -125,7 +57,7 @@ router.delete('/delete-one/:id', (req, res) => {
 });
 
 // remove episodes matching the provided query
-router.delete('/query-remove', (req, res) => {
+router.delete('/remove', (req, res) => {
   keg.query = req.body.query || {};
   command.connect(keg)
     .then(keg => command.remove(keg))

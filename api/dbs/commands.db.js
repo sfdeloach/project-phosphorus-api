@@ -36,26 +36,6 @@ let dbOperationCommands = {
         });
     });
   },
-  findOne: (keg) => {
-    return new Promise((resolve, reject) => {
-      getCollection(keg)
-        .findOne(keg.formObjectIdQuery(), (err, findOneResult) => {
-          if (err) reject(err);
-          keg.findOneResult = findOneResult;
-          resolve(keg);
-        });
-    });
-  },
-  insert: (keg) => {
-    return new Promise((resolve, reject) => {
-      getCollection(keg)
-        .insert(keg.doc, (err, insertResult) => {
-          if (err) reject(err);
-          keg.insertResult = insertResult;
-          resolve(keg);
-        });
-    });
-  },
   insertMany: (keg) => {
     return new Promise((resolve, reject) => {
       getCollection(keg)
@@ -72,16 +52,6 @@ let dbOperationCommands = {
         .replaceOne(keg.formObjectIdQuery(), keg.doc, (err, replaceOneResult) => {
           if (err) reject(err);
           keg.replaceOneResult = replaceOneResult;
-          resolve(keg);
-        });
-    });
-  },
-  deleteOne: (keg) => {
-    return new Promise((resolve, reject) => {
-      getCollection(keg)
-        .deleteOne(keg.formObjectIdQuery(), (err, deleteOneResult) => {
-          if (err) reject(err);
-          keg.deleteOneResult = deleteOneResult;
           resolve(keg);
         });
     });

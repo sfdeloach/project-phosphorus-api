@@ -14,63 +14,59 @@ router.use((req, res, next) => {
   next();
 });
 
-router.get('/', (req, res) => {
-  database.connect()
-    .then(resolution => database.find(resolution.client))
-    .then(resolution => res.json(resolution.result))
+// return the results of a query object
+router.get('/find', (req, res) => {
+  keg.query = req.body.query || {};
+  command.connect(keg)
+    .then(keg => command.find(keg))
+    .then(keg => res.json(keg.findResult))
     .catch(err => {
-      log.error(err);
-      res.json(new Result(err));
+      console.error(err);
+      res.json(new ErrJsonRes(
+        logger.message(req), err, keg
+      ));
     });
 });
 
-router.get('/:id', (req, res) => {
-  const id = req.params.id;
-  database.connect()
-    .then(resolution => database.findOne(resolution.client))
-    .then(resolution => res.json(resolution.result))
+// insert an array of episodes
+router.post('/insert-many', (req, res) => {
+  keg.documents = req.body.episodes;
+  command.connect(keg)
+    .then(keg => command.insertMany(keg))
+    .then(keg => res.json(keg.insertManyResult))
     .catch(err => {
-      log.error(err);
-      res.json(new Result(err));
+      console.error(err);
+      res.json(new ErrJsonRes(
+        logger.message(req), err, keg
+      ));
     });
 });
 
-router.post('/new', (req, res) => {
-  const officer = req.body.officer;
-  database.connect()
-    .then(resolution => database.insert(resolution.client, officer))
-    .then(resolution => res.json(new Result(
-      null, 'new officer created', newOfficer.deptID
-    )))
+router.put('/replace-one', (req, res) => {
+  keg.query = req.body.query || {};
+  keg.document = req.body.episode;
+  command.connect(keg)
+    .then(keg => command.replaceOne(keg))
+    .then(keg => res.json(keg.replaceOneResult))
     .catch(err => {
-      log.error(err);
-      res.json(new Result(err));
+      console.error(err);
+      res.json(new ErrJsonRes(
+        logger.message(req), err, keg
+      ));
     });
 });
 
-router.put('/:id', (req, res) => {
-  const id = req.params.id;
-  database.connect()
-    .then(resolution => database.replaceOne(resolution.client, id))
-    .then(resolution => res.json(new Result(
-      null, 'officer updated', newOfficer.deptID
-    )))
+// remove episodes matching the provided query
+router.delete('/remove', (req, res) => {
+  keg.query = req.body.query || {};
+  command.connect(keg)
+    .then(keg => command.remove(keg))
+    .then(keg => res.json(keg.removeResult))
     .catch(err => {
-      log.error(err);
-      res.json(new Result(err));
-    });
-});
-
-router.delete('/:id', (req, res) => {
-  const id = req.params.id;
-  database.connect()
-    .then(resolution => database.deleteOne(resolution.client, id))
-    .then(resolution => res.json(new Result(
-      null, 'officer removed'
-    )))
-    .catch(err => {
-      log.error(err);
-      res.json(new Result(err));
+      console.error(err);
+      res.json(new ErrJsonRes(
+        logger.message(req), err, keg
+      ));
     });
 });
 
