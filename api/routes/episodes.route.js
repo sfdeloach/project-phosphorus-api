@@ -14,6 +14,33 @@ router.use((req, res, next) => {
   next();
 });
 
+// RESTful API
+
+// Read - GET
+
+// api/episodes/ - return all episodes based on req.body.query (defaults {})
+// api/episodes/call/:id - return one call by :id = call.eventNbr
+// api/episodes/report/:id - find report by :id = report.caseNbr
+// api/episodes/:id - return one episode by :id = episode.ObID or call.eventNbr
+
+// Create - POST
+
+// api/episodes/ - insert one or many episodes
+// api/episodes/call/units/:id - insert one unit on :id = episode.ObID or call.eventNbr
+// api/episodes/report/:id - insert one report on :id = episode.ObID or call.eventNbr
+
+// Update - PUT
+
+// api/episodes/:id - update one episode by :id = episode.ObID or call.eventNbr
+
+// Delete - DELETE
+
+// api/episodes/ - deletes all episodes
+// api/episodes/call/units/:id - delete one unit by :id = officer.ObID or officer.deptID
+// api/episodes/report/:id - delete one report by :id = report.caseNbr
+// api/episodes/:id - delete one episode by :id = episode.ObID or call.eventNbr
+
+
 // return the results of a query object
 router.get('/find', (req, res) => {
   keg.query = req.body.query || {};
