@@ -1,0 +1,11 @@
+{
+  "officer": {
+    "_id": "5a90d17f1672d40881a6aa67",
+    "deptID": 201,
+    "name": {
+      "last": "Orlando",
+      "first": "Newman"
+    },
+    "squad": "Bravo"
+  }
+}

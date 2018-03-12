@@ -4,15 +4,8 @@ const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://localhost:27017';
 
 let getCollection = (keg) => {
-  const client = keg.client;
-  const collection = keg.collection;
-  return client.db('phosphorus').collection(collection);
-};
-
-let convertObjectIDs = (keg) => {
-  keg.documentIDs = keg.query._id;
-  keg.query = keg.formObjectIdQuery();
-  return keg;
+  return keg.client.db('phosphorus')
+    .collection(keg.collection);
 };
 
 let dbOperationCommands = {
@@ -27,7 +20,7 @@ let dbOperationCommands = {
   },
   find: (keg) => {
     return new Promise((resolve, reject) => {
-      if (keg.query._id) keg = convertObjectIDs(keg);
+      keg.convertIdToObject();
       getCollection(keg)
         .find(keg.query).toArray((err, findResult) => {
           if (err) reject(err);
@@ -48,8 +41,9 @@ let dbOperationCommands = {
   },
   replaceOne: (keg) => {
     return new Promise((resolve, reject) => {
+      keg.convertIdToObject();
       getCollection(keg)
-        .replaceOne(keg.formObjectIdQuery(), keg.doc, (err, replaceOneResult) => {
+        .replaceOne(keg.query, keg.doc, (err, replaceOneResult) => {
           if (err) reject(err);
           keg.replaceOneResult = replaceOneResult;
           resolve(keg);
@@ -58,11 +52,22 @@ let dbOperationCommands = {
   },
   remove: (keg) => {
     return new Promise((resolve, reject) => {
-      if (keg.query._id) keg = convertObjectIDs(keg);
+      keg.convertIdToObject();
       getCollection(keg)
         .remove(keg.query, (err, removeResult) => {
           if (err) reject(err);
           keg.removeResult = removeResult;
+          resolve(keg);
+        });
+    });
+  },
+  update: (keg) => {
+    return new Promise((resolve, reject) => {
+      keg.convertIdToObject();
+      getCollection(keg)
+        .update(keg.query, keg.doc, (err, updateResult) => {
+          if (err) reject(err);
+          keg.updateResult = updateResult;
           resolve(keg);
         });
     });

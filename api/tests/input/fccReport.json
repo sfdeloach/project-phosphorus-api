@@ -1,0 +1,23 @@
+{
+  "report": {
+    "caseNbr": "2017FCxx0008",
+    "reportDate": "2017-10-26T04:02:53.000Z",
+    "type": "FC",
+    "offenses": [{
+      "statue": "777.7777",
+      "statuteDesc": "Non UCR - Field Contact",
+      "ucrCode": "100A",
+      "ucrDesc": "NON UCR",
+      "ncicLevel": "X"
+    }],
+    "clearance": "Cleared",
+    "reportingOfc": {
+      "_id": "5a90d17f1672d40881a6aa90",
+      "deptID": 237,
+      "name": {
+        "last": "Fieldson",
+        "first": "Franky"
+      }
+    }
+  }
+}
