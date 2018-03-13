@@ -38,6 +38,7 @@ router.get('/', (req, res) => {
 /*
   api/episodes/call/created/:from.:to
   return episodes within a date range
+  TESTED
 */
 router.get('/call/created/:from.:to', (req, res) => {
   keg.query = {
@@ -60,6 +61,7 @@ router.get('/call/created/:from.:to', (req, res) => {
 /*
   api/episodes/call/eventNbr/:eventNbr
   return one episode by :eventNbr = call.eventNbr
+  TESTED
 */
 router.get('/call/eventNbr/:eventNbr', (req, res) => {
   keg.query = { 'call.eventNbr': +req.params.eventNbr };
@@ -77,6 +79,7 @@ router.get('/call/eventNbr/:eventNbr', (req, res) => {
 /*
   api/episodes/reports/caseNbr/:caseNbr
   find episode by :caseNbr = report.caseNbr
+  TESTED
 */
 router.get('/reports/caseNbr/:caseNbr', (req, res) => {
   keg.query = { 'reports.caseNbr': req.params.caseNbr };
@@ -94,6 +97,7 @@ router.get('/reports/caseNbr/:caseNbr', (req, res) => {
 /*
   api/episodes/call/primaryUnit/:primaryUnit
   find episodes by primaryUnit
+  TESTED
 */
 router.get('/call/primaryUnit/deptID/:deptID', (req, res) => {
   keg.query = { 'call.primaryUnit.deptID': +req.params.deptID };
@@ -111,6 +115,7 @@ router.get('/call/primaryUnit/deptID/:deptID', (req, res) => {
 /*
   api/episodes/:id
   return one episode by :id = episode.ObID
+  TESTED
 */
 router.get('/:id', (req, res) => {
   keg.query = { '_id': req.params.id };
@@ -187,7 +192,8 @@ router.post('/reports/:id', (req, res) => {
 
 /*
   api/episodes/:id
-  update one episode by :id = episode.ObID or call.eventNbr
+  replace one episode by :id = episode.ObID or call.eventNbr
+  TESTED
 */
 router.put('/:id', (req, res) => {
   keg.setQueryById(req.params.id, req, res);
@@ -208,7 +214,7 @@ router.put('/:id', (req, res) => {
 /*
   api/episodes/
   deletes episodes matching query, defaults to {} if query not provided
-  TESTS: only tested query = {}
+  TESTED
 */
 router.delete('/', (req, res) => {
   keg.query = req.body.query || {};

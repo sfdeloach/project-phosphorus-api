@@ -248,10 +248,10 @@
         }],
         "primaryUnit": {
           "_id": "5a90d17f1672d40881a6aa90",
-          "deptID": 100,
+          "deptID": 531,
           "name": {
-            "last": "Andrews",
-            "first": "Jordan"
+            "last": "Deltona",
+            "first": "Dan"
           },
           "squad": "Alpha"
         },
@@ -283,7 +283,7 @@
       "call": {
         "eventNbr": 20170001023,
         "created": "2017-10-31T04:02:53.000Z",
-        "eventType": "87HOR",
+        "eventType": "50IR",
         "src": "ONV",
         "units": [{
           "_id": "5a90d17f1672d40881a6aa90",
@@ -360,10 +360,10 @@
         }],
         "primaryUnit": {
           "_id": "5a90d17f1672d40881a6aa90",
-          "deptID": 100,
+          "deptID": 531,
           "name": {
-            "last": "Andrews",
-            "first": "Jordan"
+            "last": "Deltona",
+            "first": "Dan"
           },
           "squad": "Alpha"
         },
@@ -540,7 +540,7 @@
         "type": "OR",
         "offenses": [{
           "statue": "810.01",
-          "statuteDesc": "Burglary",
+          "statuteDesc": "You got me!",
           "ucrCode": "100A",
           "ucrDesc": "Burglary",
           "ncicLevel": "F"

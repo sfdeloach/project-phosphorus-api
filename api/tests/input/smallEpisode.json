@@ -1,0 +1,30 @@
+{
+  "episode": {
+    "call": {
+      "eventNbr": 20170001013,
+      "created": "2017-10-26T04:02:53.000Z",
+      "eventType": "99MIU",
+      "src": "Small Episode",
+      "units": [{
+        "_id": "5a90d17f1672d40881a6aa90",
+        "deptID": 100,
+        "name": {
+          "last": "Andrews",
+          "first": "Jordan"
+        },
+        "squad": "Alpha"
+      }],
+      "primaryUnit": {
+        "_id": "5a90d17f1672d40881a6aa90",
+        "deptID": 100,
+        "name": {
+          "last": "Andrews",
+          "first": "Jordan"
+        },
+        "squad": "Alpha"
+      },
+      "disps": ["P"]
+    },
+    "reports": []
+  }
+}
