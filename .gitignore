@@ -6,7 +6,7 @@
 /out-tsc
 
 # test results
-test-*.result.json
+/api/tests/output/test-*.result.json
 
 # dependencies
 /node_modules
