@@ -17,26 +17,26 @@ class Keg {
     sets query from a parameter that is either an event number or object ID
   */
   setQueryById(parameter, req, res) {
-    if (parameter.length === 11 &&
-      /^[0-9]+$/g.test(parameter)) {
-      this.query = { 'call.eventNbr': +parameter };
-    } else if (parameter.length === 24 &&
-      /^[a-fA-F0-9]+$/g.test(parameter)) {
-      this.query = { '_id': parameter };
-    } else {
-      this.query = undefined;
-      res.json(new ErrJsonRes(
-        logger.message(req), "parameter must be an ObjectID or eventNbr", this
-      ));
-    }
-    return;
+    return new Promise((resolve, reject) => {
+      if (parameter.length === 11 &&
+        /^[0-9]+$/g.test(parameter)) {
+        this.query = { 'call.eventNbr': +parameter };
+      } else if (parameter.length === 24 &&
+        /^[a-fA-F0-9]+$/g.test(parameter)) {
+        this.query = { '_id': parameter };
+      } else {
+        this.query = 'malformed';
+        reject(`parameter '${parameter}' must be an ObjectID or eventNbr`);
+      }
+      resolve();
+    });
   }
 
   /*
     accepts either a single ID or an array of IDs
   */
   convertIdToObject() {
-    if (this.query._id) {
+    if (this.query && this.query._id) {
       let mongoObjectIDs = [];
       if (Array.isArray(this.query._id)) {
         this.query._id.forEach(id => {

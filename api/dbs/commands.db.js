@@ -65,7 +65,7 @@ let dbOperationCommands = {
     return new Promise((resolve, reject) => {
       keg.convertIdToObject();
       getCollection(keg)
-        .update(keg.query, keg.doc, (err, updateResult) => {
+        .update(keg.query, keg.doc, { multi: true }, (err, updateResult) => {
           if (err) reject(err);
           keg.updateResult = updateResult;
           resolve(keg);

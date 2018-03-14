@@ -24,7 +24,7 @@ stat --printf="%s" ./output/test-00.expected.json
 printf "${C} bytes, received ${B}"
 stat --printf="%s" ./output/test-00.result.json
 printf "${C} bytes \n"
-echo "-------------------------------------------------------"
+echo "-------------------------------------------------------------------------"
 
 # insertMany episodes
 printf "\nTest #1: POST $url"
@@ -43,7 +43,7 @@ stat --printf="%s" ./output/test-01.expected.json
 printf "${C} bytes, received ${B}"
 stat --printf="%s" ./output/test-01.result.json
 printf "${C} bytes \n"
-echo "-------------------------------------------------------"
+echo "-------------------------------------------------------------------------"
 
 # insert a single episode
 printf "\nTest #2: POST $url"
@@ -62,7 +62,7 @@ stat --printf="%s" ./output/test-02.expected.json
 printf "${C} bytes, received ${B}"
 stat --printf="%s" ./output/test-02.result.json
 printf "${C} bytes \n"
-echo "-------------------------------------------------------"
+echo "-------------------------------------------------------------------------"
 
 # get all episodes
 printf "\nTest #3: GET $url"
@@ -75,7 +75,7 @@ stat --printf="%s" ./output/test-03.expected.json
 printf "${C} bytes, received ${B}"
 stat --printf="%s" ./output/test-03.result.json
 printf "${C} bytes \n"
-echo "-------------------------------------------------------"
+echo "-------------------------------------------------------------------------"
 
 # insert a unit via event number
 printf "\nTest #4: POST $url/call/units/20170001013"
@@ -94,7 +94,7 @@ stat --printf="%s" ./output/test-04.expected.json
 printf "${C} bytes, received ${B}"
 stat --printf="%s" ./output/test-04.result.json
 printf "${C} bytes \n"
-echo "-------------------------------------------------------"
+echo "-------------------------------------------------------------------------"
 
 # save the related ObjectID
 objectID=$(curl --silent --request GET --url ${url} | jq -r '.[12] | ._id')
@@ -116,7 +116,7 @@ stat --printf="%s" ./output/test-05.expected.json
 printf "${C} bytes, received ${B}"
 stat --printf="%s" ./output/test-05.result.json
 printf "${C} bytes \n"
-echo "-------------------------------------------------------"
+echo "-------------------------------------------------------------------------"
 
 # insert a report via id
 printf "\nTest #6: POST $url/reports/$objectID"
@@ -136,7 +136,7 @@ stat --printf="%s" ./output/test-06.expected.json
 printf "${C} bytes, received ${B}"
 stat --printf="%s" ./output/test-06.result.json
 printf "${C} bytes \n"
-echo "-------------------------------------------------------"
+echo "-------------------------------------------------------------------------"
 
 # insert a report via event number
 printf "\nTest #7: POST $url/reports/20170001013"
@@ -156,7 +156,7 @@ stat --printf="%s" ./output/test-07.expected.json
 printf "${C} bytes, received ${B}"
 stat --printf="%s" ./output/test-07.result.json
 printf "${C} bytes \n"
-echo "-------------------------------------------------------"
+echo "-------------------------------------------------------------------------"
 
 # replace an entire episode (smaller) by event
 printf "\nTest #8: PUT $url/20170992367"
@@ -176,7 +176,7 @@ stat --printf="%s" ./output/test-08.expected.json
 printf "${C} bytes, received ${B}"
 stat --printf="%s" ./output/test-08.result.json
 printf "${C} bytes \n"
-echo "-------------------------------------------------------"
+echo "-------------------------------------------------------------------------"
 
 # save the related ObjectID
 objectID=$(curl --silent --request GET --url ${url} | jq -r '.[11] | ._id')
@@ -199,22 +199,22 @@ stat --printf="%s" ./output/test-09.expected.json
 printf "${C} bytes, received ${B}"
 stat --printf="%s" ./output/test-09.result.json
 printf "${C} bytes \n"
-echo "-------------------------------------------------------"
+echo "-------------------------------------------------------------------------"
 
 # get episodes within a date range
-printf "\nTest 10: GET $url/call/created/2017-10-01.2017-10-25"
+printf "\nTest 10: GET $url/call/created/2017-10-01/2017-10-25"
 printf "\n..retrieve episodes from 10/01/17 to 10/25/17\n"
 printf "..expecting { ${O}'number_of_episodes': 5${C} }\n"
 curl --silent -o ./output/test-10.result.json\
   --request GET \
-  --url $url/call/created/2017-10-01.2017-10-25
+  --url $url/call/created/2017-10-01/2017-10-25
 cat ./output/test-10.result.json | jq '. | { number_of_episodes: length}'
 printf "expected ${B}"
 stat --printf="%s" ./output/test-10.expected.json
 printf "${C} bytes, received ${B}"
 stat --printf="%s" ./output/test-10.result.json
 printf "${C} bytes \n"
-echo "-------------------------------------------------------"
+echo "-------------------------------------------------------------------------"
 
 # get an episode by event number
 printf "\nTest 11: GET $url/call/eventNbr/20170001023"
@@ -229,7 +229,7 @@ stat --printf="%s" ./output/test-11.expected.json
 printf "${C} bytes, received ${B}"
 stat --printf="%s" ./output/test-11.result.json
 printf "${C} bytes \n"
-echo "-------------------------------------------------------"
+echo "-------------------------------------------------------------------------"
 
 # find episode by :caseNbr = report.caseNbr
 printf "\nTest 12: GET $url/reports/caseNbr/2017CJ003476"
@@ -244,7 +244,7 @@ stat --printf="%s" ./output/test-12.expected.json
 printf "${C} bytes, received ${B}"
 stat --printf="%s" ./output/test-12.result.json
 printf "${C} bytes \n"
-echo "-------------------------------------------------------"
+echo "-------------------------------------------------------------------------"
 
 # find episodes by primaryUnit
 printf "\nTest 13: GET $url/call/primaryUnit/deptID/531"
@@ -259,26 +259,26 @@ stat --printf="%s" ./output/test-13.expected.json
 printf "${C} bytes, received ${B}"
 stat --printf="%s" ./output/test-13.result.json
 printf "${C} bytes \n"
-echo "-------------------------------------------------------"
+echo "-------------------------------------------------------------------------"
 
 # return one episode by Object ID
-printf "\nTest 14: GET $url/$objectID"
-printf "\n..return one episode by Object ID\n"
-printf "..expecting { ${O}'number': 1${C} }\n"
+printf "\nTest 14: GET $url/$objectID\n"
+printf "..return one episode by Object ID\n"
+printf "..expecting ${O}'Big Ass Episode'${C}\n"
 curl --silent -o ./output/test-14.result.json \
   --request GET \
   --url $url/$objectID
-cat ./output/test-14.result.json | jq '. | { number: length }'
+cat ./output/test-14.result.json | jq '.[0].call.src'
 printf "expected ${B}"
 stat --printf="%s" ./output/test-14.expected.json
 printf "${C} bytes, received ${B}"
 stat --printf="%s" ./output/test-14.result.json
 printf "${C} bytes \n"
-echo "-------------------------------------------------------"
+echo "-------------------------------------------------------------------------"
 
 # delete episodes via query: {"call.created": {"$gte": "2017-11-15T00:00:00.000Z","$lt": "2018-03-01T00:00:00.000Z"}}
-printf "\nTest #15: DELETE $url"
-printf " - delete episodes via query\n"
+printf "\nTest #15: DELETE $url\n"
+printf "..delete episodes via query\n"
 printf "..expecting { ${O}'n': 3${C} }\n"
 curl --silent -o ./output/test-15.result.json \
   --request DELETE \
@@ -291,4 +291,119 @@ stat --printf="%s" ./output/test-15.expected.json
 printf "${C} bytes, received ${B}"
 stat --printf="%s" ./output/test-15.result.json
 printf "${C} bytes \n"
-echo "-------------------------------------------------------"
+echo "-------------------------------------------------------------------------"
+
+# remove all reports given a case number
+printf "\nTest #16: DELETE $url/reports/caseNbr/201710002321\n"
+printf "..remove all reports given a case number\n"
+printf "..expecting { ${O}'n': 2${C} }\n"
+curl --silent -o ./output/test-16.result.json \
+  --request DELETE \
+  --url $url/reports/caseNbr/201710002321
+cat ./output/test-16.result.json | jq '. | { n: .n }'
+printf "expected ${B}"
+stat --printf="%s" ./output/test-16.expected.json
+printf "${C} bytes, received ${B}"
+stat --printf="%s" ./output/test-16.result.json
+printf "${C} bytes \n"
+echo "-------------------------------------------------------------------------"
+
+# remove all reports given a case number
+printf "\nTest #17: DELETE $url/$objectID\n"
+printf "..remove an episode via object ID\n"
+printf "..expecting { ${O}'n': 1${C} }\n"
+curl --silent -o ./output/test-17.result.json \
+  --request DELETE \
+  --url $url/$objectID
+cat ./output/test-17.result.json | jq '. | { n: .n }'
+printf "expected ${B}"
+stat --printf="%s" ./output/test-17.expected.json
+printf "${C} bytes, received ${B}"
+stat --printf="%s" ./output/test-17.result.json
+printf "${C} bytes \n"
+echo "-------------------------------------------------------------------------"
+
+# remove episodes within a given date range
+printf "\nTest #18: DELETE $url/call/created/2017-11-01/2019-01-01\n"
+printf "..remove episodes within a given date range\n"
+printf "..expecting { ${O}'n': 2${C} }\n"
+curl --silent -o ./output/test-18.result.json \
+  --request DELETE \
+  --url $url/call/created/2017-11-01/2019-01-01
+cat ./output/test-18.result.json | jq '. | { n: .n }'
+printf "expected ${B}"
+stat --printf="%s" ./output/test-18.expected.json
+printf "${C} bytes, received ${B}"
+stat --printf="%s" ./output/test-18.result.json
+printf "${C} bytes \n"
+echo "-------------------------------------------------------------------------"
+
+# with an episode matching eventNbr, remove the matching deptID
+# removes Rick Sanchez
+printf "\nTest #19: DELETE $url/call/units/20170001013/202\n"
+printf "..with an episode matching eventNbr, remove the matching deptID\n"
+printf "..expecting { ${O}'nModified': 1${C} }\n"
+curl --silent -o ./output/test-19.result.json \
+  --request DELETE \
+  --url $url/call/units/20170001013/202
+cat ./output/test-19.result.json | jq '. | { nModified: .nModified }'
+printf "expected ${B}"
+stat --printf="%s" ./output/test-19.expected.json
+printf "${C} bytes, received ${B}"
+stat --printf="%s" ./output/test-19.result.json
+printf "${C} bytes \n"
+echo "-------------------------------------------------------------------------"
+
+# save the related ObjectID
+objectID=$(curl --silent --request GET --url ${url} | jq -r '.[6] | ._id')
+
+# with an episode matching object ID, remove the matching deptID
+# removes Kyle Baker
+printf "\nTest #20: DELETE $url/call/units/$objectID/101\n"
+printf "..with an episode matching object ID, remove the matching deptID\n"
+printf "..expecting { ${O}'nModified': 1${C} }\n"
+curl --silent -o ./output/test-20.result.json \
+  --request DELETE \
+  --url $url/call/units/$objectID/101
+cat ./output/test-20.result.json | jq '. | { nModified: .nModified }'
+printf "expected ${B}"
+stat --printf="%s" ./output/test-20.expected.json
+printf "${C} bytes, received ${B}"
+stat --printf="%s" ./output/test-20.result.json
+printf "${C} bytes \n"
+echo "-------------------------------------------------------------------------"
+
+# test wildcard route
+curl --silent -o ./output/test-21.result.json \
+  --request POST \
+  --url $url/does-not-exist
+
+# test malformed URLs
+curl --silent -o ./output/test-22.result.json \
+  --request GET \
+  --url $url/this-is-not-an-id-or-event-number
+curl --silent -o ./output/test-23.result.json \
+  --request PUT \
+  --url $url/this-is-not-an-id-or-event-number
+curl --silent -o ./output/test-24.result.json \
+  --request DELETE \
+  --url $url/this-is-not-an-id-or-event-number
+
+# find episodes via query located @./input/findQuery.json
+printf "\nTest #25: FIND $url\n"
+printf "..find episodes via query\n"
+printf "..expecting ${O}'Deltona'${C}\n"
+curl --silent -o ./output/test-25.result.json \
+  --request GET \
+  --url $url/ \
+  --header 'Content-Type: application/json' \
+  --data "@./input/findQuery.json"
+cat ./output/test-25.result.json | jq '.[0].call.primaryUnit.name.last'
+printf "expected ${B}"
+stat --printf="%s" ./output/test-25.expected.json
+printf "${C} bytes, received ${B}"
+stat --printf="%s" ./output/test-25.result.json
+printf "${C} bytes \n"
+echo "-------------------------------------------------------------------------"
+echo "                             TESTS COMPLETE                              "
+echo "-------------------------------------------------------------------------"
