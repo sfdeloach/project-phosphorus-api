@@ -30,6 +30,14 @@ app.use(function (req, res, next) {
 app.use('/api/episodes', episodes);
 app.use('/api/officers', officers);
 
+// Wildcard route
+app.all('/*', (req, res) => {
+  logger.reportError('app not found');
+  res.json(new ErrJsonRes(
+    logger.message(req), 'app not found', keg
+  ));
+});
+
 app.listen(3000, () => {
   console.log(`${new Date().toISOString()} - Phosphorus API listening on port 3000!`);
 });
