@@ -276,7 +276,7 @@ stat --printf="%s" ./output/test-14.result.json
 printf "${C} bytes \n"
 echo "-------------------------------------------------------------------------"
 
-# delete episodes via query: {"call.created": {"$gte": "2017-11-15T00:00:00.000Z","$lt": "2018-03-01T00:00:00.000Z"}}
+# delete episodes via query located at ./input/deleteQuery.json
 printf "\nTest #15: DELETE $url\n"
 printf "..delete episodes via query\n"
 printf "..expecting { ${O}'n': 3${C} }\n"

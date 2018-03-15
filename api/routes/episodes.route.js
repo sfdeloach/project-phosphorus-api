@@ -20,7 +20,7 @@ router.use((req, res, next) => {
 /*
   api/episodes/
   return all episodes based on req.body.query (defaults {})
-  TEST #3 PASS, Find on query not tested TODO
+  TEST #3 and TEST #25
 */
 router.get('/', (req, res) => {
   keg.query = req.body.query || {};
@@ -306,15 +306,6 @@ router.delete('/reports/caseNbr/:caseNbr', (req, res) => {
         logger.message(req), err, keg
       ));
     });
-});
-
-/* Wildcard *******************************************************************/
-
-router.all('/*', (req, res) => {
-  logger.reportError('episode route not found');
-  res.json(new ErrJsonRes(
-    logger.message(req), 'episode route not found', keg
-  ));
 });
 
 module.exports = router;
