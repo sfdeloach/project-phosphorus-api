@@ -373,17 +373,19 @@ stat --printf="%s" ./output/test-20.result.json
 printf "${C} bytes \n"
 echo "-------------------------------------------------------------------------"
 
-# test wildcard route
+# test episode wildcard route
 curl --silent -o ./output/test-21.result.json \
   --request POST \
   --url $url/does-not-exist
 
-# test malformed URLs
-curl --silent -o ./output/test-22.result.json \
-  --request GET \
-  --url $url/this-is-not-an-id-or-event-number
+# test application wildcard route
 curl --silent -o ./output/test-23.result.json \
   --request PUT \
+  --url localhost:3000/apples/this-is-not-a-route
+
+# test malformed episode URLs
+curl --silent -o ./output/test-22.result.json \
+  --request GET \
   --url $url/this-is-not-an-id-or-event-number
 curl --silent -o ./output/test-24.result.json \
   --request DELETE \

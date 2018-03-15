@@ -4,7 +4,7 @@ let log = {
   request: req => {
     let message = '';
     if (Object.keys(req.body).length !== 0) {
-      message = ' (*)';
+      message = ':{' + Object.keys(req.body) + '}';
     }
     console.log(ts() + req.method + ' ' + req.baseUrl + req.path + message);
   },

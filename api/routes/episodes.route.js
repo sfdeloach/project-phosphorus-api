@@ -311,9 +311,9 @@ router.delete('/reports/caseNbr/:caseNbr', (req, res) => {
 /* Wildcard *******************************************************************/
 
 router.all('/*', (req, res) => {
-  logger.reportError('route not found');
+  logger.reportError('episode route not found');
   res.json(new ErrJsonRes(
-    logger.message(req), 'route not found', keg
+    logger.message(req), 'episode route not found', keg
   ));
 });
 

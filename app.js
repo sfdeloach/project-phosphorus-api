@@ -9,6 +9,10 @@ const app = express();
 const episodes = require('./api/routes/episodes.route');
 const officers = require('./api/routes/officers.route');
 
+const logger = require('./api/assets/log.utility');
+const ErrJsonRes = require('./api/models/error.response.model.js');
+const Keg = require('./api/models/keg.model.js');
+
 app.use(bodyParser.json({
   limit: '20mb'
 }));
@@ -32,9 +36,11 @@ app.use('/api/officers', officers);
 
 // Wildcard route
 app.all('/*', (req, res) => {
-  logger.reportError('app not found');
+  logger.request(req);
+  logger.reportError('app route not found');
+  keg = new Keg('not found');
   res.json(new ErrJsonRes(
-    logger.message(req), 'app not found', keg
+    logger.message(req), 'app route not found', keg
   ));
 });
 
