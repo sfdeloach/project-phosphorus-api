@@ -4,8 +4,8 @@
   "description": "RESTful API back end for project phosphorus",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js",
+    "dev": "nodemon app.js",
+    "start": "node app.js",
     "test": "nodemon --ignore './api/tests/*'"
   },
   "repository": {

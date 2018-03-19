@@ -1,0 +1,22 @@
+{
+  "officers": [
+    {"deptID":455,"name":{"last":"Tolonni","first":"Mark"},"squad":"Charlie"},
+    {"deptID":606,"name":{"last":"Singh","first":"Collette"},"squad":"Charlie"},
+    {"deptID":645,"name":{"last":"Barry","first":"Conrad"},"squad":"Charlie"},
+    {"deptID":661,"name":{"last":"Megliore","first":"Emilio"},"squad":"Charlie"},
+    {"deptID":627,"name":{"last":"Rivers","first":"Carlos"},"squad":"Charlie"},
+    {"deptID":662,"name":{"last":"Done","first":"Matthew"},"squad":"Charlie"},
+    {"deptID":663,"name":{"last":"Mickers","first":"Marcus"},"squad":"Charlie"},
+    {"deptID":655,"name":{"last":"Bolo","first":"Will"},"squad":"Charlie"},
+    {"deptID":482,"name":{"last":"Decker","first":"Rob"},"squad":"Delta"},
+    {"deptID":537,"name":{"last":"Sidobacon","first":"Dan"},"squad":"Delta"},
+    {"deptID":601,"name":{"last":"Daniels","first":"Jeremy"},"squad":"Delta"},
+    {"deptID":591,"name":{"last":"DeSaola","first":"Deana"},"squad":"Delta"},
+    {"deptID":635,"name":{"last":"Groovy","first":"Garrett"},"squad":"Delta"},
+    {"deptID":660,"name":{"last":"Peltman","first":"Matthew"},"squad":"Delta"},
+    {"deptID":659,"name":{"last":"Razor","first":"Lauren"},"squad":"Delta"},
+    {"deptID":647,"name":{"last":"Decalog","first":"Andrew"},"squad":"Bravo"},
+    {"deptID":649,"name":{"last":"Sinotoso","first":"Maqia"},"squad":"Delta"},
+    {"deptID":638,"name":{"last":"Raquan","first":"Jacob"},"squad":"Delta"}
+  ]
+}

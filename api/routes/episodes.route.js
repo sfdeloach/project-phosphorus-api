@@ -6,8 +6,7 @@ const logger = require('../assets/log.utility');
 
 const ErrJsonRes = require('../models/error.response.model.js');
 const Keg = require('../models/keg.model');
-
-let keg = new Keg('episodes');
+let keg;
 
 router.use((req, res, next) => {
   logger.request(req);
@@ -114,7 +113,7 @@ router.get('/call/primaryUnit/deptID/:deptID', (req, res) => {
 
 /*
   api/episodes/:id
-  return one episode by :id = episode.ObID
+  return one episode by :id = episode._id
   TEST #14
 */
 router.get('/:id', (req, res) => {
@@ -152,7 +151,7 @@ router.post('/', (req, res) => {
 
 /*
   api/episodes/call/units/:id
-  insert one unit on :id = episode.ObID or call.eventNbr
+  insert one unit on :id = episode._id or call.eventNbr
   TEST #4 and TEST #5 PASS
 */
 router.post('/call/units/:id', (req, res) => {
@@ -171,7 +170,7 @@ router.post('/call/units/:id', (req, res) => {
 
 /*
   api/episodes/reports/:id
-  insert one report on :id = episode.ObID or call.eventNbr
+  insert one report on :id = episode._id or call.eventNbr
   TEST #6 and TEST #7 PASS
 */
 router.post('/reports/:id', (req, res) => {
@@ -192,7 +191,7 @@ router.post('/reports/:id', (req, res) => {
 
 /*
   api/episodes/:id
-  replace one episode by :id = episode.ObID or call.eventNbr
+  replace one episode by :id = episode._id or call.eventNbr
   TEST #8 and TEST #9 PASS
 */
 router.put('/:id', (req, res) => {
@@ -231,7 +230,7 @@ router.delete('/', (req, res) => {
 
 /*
   api/episodes/:id
-  delete one episode by :id = episode.ObID or call.eventNbr
+  delete one episode by :id = episode._id or call.eventNbr
   TEST #17
 */
 router.delete('/:id', (req, res) => {
