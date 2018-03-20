@@ -9,7 +9,7 @@ const app = express();
 const episodes = require('./api/routes/episodes.route');
 const officers = require('./api/routes/officers.route');
 
-const logger = require('./api/assets/log.utility');
+const logger = require('./api/assets/logger.utility');
 const ErrJsonRes = require('./api/models/error.response.model.js');
 const Keg = require('./api/models/keg.model.js');
 

@@ -1,0 +1,10 @@
+{
+  "officer": {
+    "deptID": 555,
+    "name": {
+      "last": "Millerson",
+      "first": "Daniel"
+    },
+    "squad": "Street Crime"
+  }
+}

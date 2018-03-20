@@ -1,0 +1,10 @@
+{
+  "officer": {
+    "deptID": 545,
+    "name": {
+      "last": "Sosastic",
+      "first": "Mary"
+    },
+    "squad": "Uptown"
+  }
+}

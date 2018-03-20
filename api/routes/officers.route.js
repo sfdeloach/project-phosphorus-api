@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const command = require('../dbs/commands.db');
-const logger = require('../assets/log.utility');
+const logger = require('../assets/logger.utility');
 
 const ErrJsonRes = require('../models/error.response.model.js');
 const Keg = require('../models/keg.model');
@@ -27,7 +27,8 @@ router.get('/', (req, res) => {
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
     .catch(err => {
-      console.error(err);
+      delete keg.client;
+      logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
       ));
@@ -37,7 +38,7 @@ router.get('/', (req, res) => {
 /*
   api/officers/:id
   return one officer by :id = officer._id
-  NOT TESTED
+  TEST #55
 */
 router.get('/:id', (req, res) => {
   keg.setQueryById(req.params.id, req, res)
@@ -45,6 +46,7 @@ router.get('/:id', (req, res) => {
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -63,6 +65,7 @@ router.get('/squad/:squad', (req, res) => {
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -75,7 +78,7 @@ router.get('/squad/:squad', (req, res) => {
 /*
   api/officers/
   insert one or many officers, officers must be an array
-  TEST #51 and TEST #52
+  TEST #51, #52, and #54
 */
 router.post('/', (req, res) => {
   keg.documents = req.body.officers;
@@ -83,6 +86,7 @@ router.post('/', (req, res) => {
     .then(keg => command.insertMany(keg))
     .then(keg => res.json(keg.insertManyResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -95,7 +99,7 @@ router.post('/', (req, res) => {
 /*
   api/officers/:id
   replace one officer by :id = officer._id
-  NOT TESTED
+  TEST #56
 */
 router.put('/:id', (req, res) => {
   keg.doc = req.body.officer;
@@ -104,6 +108,7 @@ router.put('/:id', (req, res) => {
     .then(keg => command.replaceOne(keg))
     .then(keg => res.json(keg.replaceOneResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -114,15 +119,16 @@ router.put('/:id', (req, res) => {
 /*
   api/officers/deptID/:deptID
   replace one officer by officer.deptID
-  NOT TESTED
+  TEST #57
 */
 router.put('/deptID/:deptID', (req, res) => {
   keg.doc = req.body.officer;
-  keg.setQueryById(req.params.id, req, res) // TODO: fix
+  keg.setQueryById(req.params.deptID, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.replaceOne(keg))
     .then(keg => res.json(keg.replaceOneResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -143,6 +149,7 @@ router.delete('/', (req, res) => {
     .then(keg => command.remove(keg))
     .then(keg => res.json(keg.removeResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -161,6 +168,7 @@ router.delete('/:id', (req, res) => {
     .then(keg => command.remove(keg))
     .then(keg => res.json(keg.removeResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -179,6 +187,7 @@ router.delete('/deptID/:deptID', (req, res) => {
     .then(keg => command.remove(keg))
     .then(keg => res.json(keg.removeResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg

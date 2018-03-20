@@ -1,5 +1,5 @@
 const ErrJsonRes = require('./error.response.model.js');
-const logger = require('../assets/log.utility');
+const logger = require('../assets/logger.utility');
 
 /*
   A 'Keg' object holds a number of properties useful in database operations,
@@ -24,6 +24,9 @@ class Keg {
       } else if (parameter.length === 24 &&
         /^[a-fA-F0-9]+$/g.test(parameter)) {
         this.query = { '_id': parameter };
+      } else if (parameter.length === 3 &&
+        /^[0-9]+$/g.test(parameter)) {
+        this.query = { 'deptID': +parameter };
       } else {
         this.query = 'malformed';
         reject(`parameter '${parameter}' must be an ObjectID or eventNbr`);

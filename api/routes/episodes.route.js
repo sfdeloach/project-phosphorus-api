@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const command = require('../dbs/commands.db');
-const logger = require('../assets/log.utility');
+const logger = require('../assets/logger.utility');
 
 const ErrJsonRes = require('../models/error.response.model.js');
 const Keg = require('../models/keg.model');
@@ -27,6 +27,7 @@ router.get('/', (req, res) => {
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -50,6 +51,7 @@ router.get('/call/created/:from/:to', (req, res) => {
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -68,6 +70,7 @@ router.get('/call/eventNbr/:eventNbr', (req, res) => {
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -86,6 +89,7 @@ router.get('/reports/caseNbr/:caseNbr', (req, res) => {
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -104,6 +108,7 @@ router.get('/call/primaryUnit/deptID/:deptID', (req, res) => {
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -122,6 +127,7 @@ router.get('/:id', (req, res) => {
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -142,6 +148,7 @@ router.post('/', (req, res) => {
     .then(keg => command.insertMany(keg))
     .then(keg => res.json(keg.insertManyResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -161,6 +168,7 @@ router.post('/call/units/:id', (req, res) => {
     .then(keg => command.update(keg))
     .then(keg => res.json(keg.updateResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -180,6 +188,7 @@ router.post('/reports/:id', (req, res) => {
     .then(keg => command.update(keg))
     .then(keg => res.json(keg.updateResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -201,6 +210,7 @@ router.put('/:id', (req, res) => {
     .then(keg => command.replaceOne(keg))
     .then(keg => res.json(keg.replaceOneResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -221,6 +231,7 @@ router.delete('/', (req, res) => {
     .then(keg => command.remove(keg))
     .then(keg => res.json(keg.removeResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -239,6 +250,7 @@ router.delete('/:id', (req, res) => {
     .then(keg => command.remove(keg))
     .then(keg => res.json(keg.removeResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -258,6 +270,7 @@ router.delete('/call/units/:id/:deptID', (req, res) => {
     .then(keg => command.update(keg))
     .then(keg => res.json(keg.updateResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -281,6 +294,7 @@ router.delete('/call/created/:from/:to', (req, res) => {
     .then(keg => command.remove(keg))
     .then(keg => res.json(keg.removeResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg
@@ -300,6 +314,7 @@ router.delete('/reports/caseNbr/:caseNbr', (req, res) => {
     .then(keg => command.update(keg))
     .then(keg => res.json(keg.updateResult))
     .catch(err => {
+      delete keg.client;
       logger.reportError(err);
       res.json(new ErrJsonRes(
         logger.message(req), err, keg

@@ -1,6 +1,6 @@
 let ts = () => `${new Date().toISOString()} - `;
 
-let log = {
+let logger = {
   request: req => {
     let message = '';
     if (Object.keys(req.body).length !== 0) {
@@ -12,8 +12,8 @@ let log = {
     return `${req.method} ${req.baseUrl}${req.path}`;
   },
   reportError: err => {
-    console.log(ts() + 'WARNING! ' + err);
+    console.log(ts() + 'WARNING! ' + err.message);
   }
 };
 
-module.exports = log;
+module.exports = logger;

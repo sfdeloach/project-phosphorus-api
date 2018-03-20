@@ -31,6 +31,7 @@ let dbOperationCommands = {
   },
   insertMany: (keg) => {
     return new Promise((resolve, reject) => {
+      if (!keg.documents) reject(new Error('nothing to insert'));
       getCollection(keg)
         .insertMany(keg.documents, (err, insertManyResult) => {
           if (err) reject(err);
