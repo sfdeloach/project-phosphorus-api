@@ -14,7 +14,7 @@ url="localhost:3000/api/officers"
 
 # delete the officer collection
 printf "${P}Test #50:${C} DELETE $url..."
-expected01=19
+expected01=10
 curl --silent -o ./output/test-50.result.json \
   --request DELETE \
   --url $url
@@ -26,7 +26,7 @@ else printf "${R}FAILURE...$expected01 != $length${C}\n";
 fi
 
 # insertMany officers
-printf "${P}Test #51:${C} POST $url..."
+printf "${P}Test #51:${C} POST $url/:{officers}..."
 expected01=18
 curl --silent -o ./output/test-51.result.json \
   --request POST \
@@ -41,7 +41,7 @@ else printf "${R}FAILURE...$expected01 != $length${C}\n";
 fi
 
 # insert one officer
-printf "${P}Test #52:${C} POST $url..."
+printf "${P}Test #52:${C} POST $url/:{officer}..."
 expected01='Delrusso'
 curl --silent -o ./output/test-52.result.json \
   --request POST \
@@ -72,7 +72,7 @@ else printf "${R}FAILURE...$expected01 != $lastName and $expected02 != $length${
 fi
 
 # post an empty body in the request
-printf "${P}Test #54:${C} POST $url..."
+printf "${P}Test #54:${C} POST $url/:{null}..."
 expected01='nothing to insert'
 curl --silent -o ./output/test-54.result.json \
   --request POST \
@@ -107,7 +107,7 @@ else printf "${R}FAILURE...$expected01 != $deptID and $expected02 != $lastName${
 fi
 
 # replace an officer by _id
-printf "${P}Test #56:${C} PUT $url/$objectID..."
+printf "${P}Test #56:${C} PUT $url/$objectID/:{officer}..."
 expected01=1
 expected02=1
 curl --silent -o ./output/test-56.result.json \
@@ -125,7 +125,7 @@ else printf "${R}FAILURE...$expected01 != $n and $expected02 != $nModified${C}\n
 fi
 
 # replace an officer by deptID
-printf "${P}Test #57:${C} PUT $url/deptID/545..."
+printf "${P}Test #57:${C} PUT $url/deptID/545/:{officer}..."
 expected01=1
 expected02=1
 curl --silent -o ./output/test-57.result.json \
@@ -143,7 +143,7 @@ else printf "${R}FAILURE...$expected01 != $n and $expected02 != $nModified${C}\n
 fi
 
 # replace an officer by deptID, pass an empty body in the request
-printf "${P}Test #58:${C} PUT $url/deptID/545..."
+printf "${P}Test #58:${C} PUT $url/deptID/545/:{null}..."
 expected01="document must be a valid JavaScript object"
 curl --silent -o ./output/test-58.result.json \
   --request PUT \
@@ -158,7 +158,101 @@ else printf "${R}FAILURE...$expected01 != $error${C}\n";
 fi
 
 # get an officer by query
+printf "${P}Test #59:${C} GET $url\:{query}..."
+expected01='Done'
+expected02=3
+curl --silent -o ./output/test-59.result.json \
+  --request GET \
+  --url $url \
+  --header 'Content-Type: application/json' \
+  --data "@./input/findOfcQuery.json"
+lastName=$(cat ./output/test-59.result.json \
+  | jq --raw-output '.[1].name.last')
+length=$(cat ./output/test-59.result.json \
+  | jq --raw-output '. | length')
+if [ "$lastName" == "$expected01" ] && [ $length == $expected02 ];
+then printf "${G}SUCCESS...$lastName and $length${C}\n";
+else printf "${R}FAILURE...$expected01 != $lastName and $expected02 != $length${C}\n";
+fi
+
 # get officers by squad
+printf "${P}Test #60:${C} GET $url/squad/c..."
+expected01='Singh'
+expected02=7
+curl --silent -o ./output/test-60.result.json \
+  --request GET \
+  --url $url/squad/c
+lastName=$(cat ./output/test-60.result.json \
+  | jq --raw-output '.[1].name.last')
+length=$(cat ./output/test-60.result.json \
+  | jq --raw-output '. | length')
+if [ "$lastName" == "$expected01" ] && [ $length == $expected02 ];
+then printf "${G}SUCCESS...$lastName and $length${C}\n";
+else printf "${R}FAILURE...$expected01 != $lastName and $expected02 != $length${C}\n";
+fi
+
 # delete an officer by deptID
+printf "${P}Test #61:${C} DELETE $url/$objectID..."
+expected01=1
+expected02=1
+curl --silent -o ./output/test-61.result.json \
+  --request DELETE \
+  --url $url/$objectID
+n=$(cat ./output/test-61.result.json \
+  | jq --raw-output '.n')
+ok=$(cat ./output/test-61.result.json \
+  | jq --raw-output '.ok')
+if [ "$n" == "$expected01" ] && [ $ok == $expected02 ];
+then printf "${G}SUCCESS...$n and $ok${C}\n";
+else printf "${R}FAILURE...$expected01 != $n and $expected02 != $ok${C}\n";
+fi
+
 # delete an officer by _id
+printf "${P}Test #62:${C} DELETE $url/deptID/531..."
+expected01=1
+expected02=1
+curl --silent -o ./output/test-62.result.json \
+  --request DELETE \
+  --url $url/deptID/531
+n=$(cat ./output/test-62.result.json \
+  | jq --raw-output '.n')
+ok=$(cat ./output/test-62.result.json \
+  | jq --raw-output '.ok')
+if [ "$n" == "$expected01" ] && [ $ok == $expected02 ];
+then printf "${G}SUCCESS...$n and $ok${C}\n";
+else printf "${R}FAILURE...$expected01 != $n and $expected02 != $ok${C}\n";
+fi
+
 # delete an officer by query
+printf "${P}Test #63:${C} DELETE $url/:{query}..."
+expected01=3
+expected02=1
+curl --silent -o ./output/test-63.result.json \
+  --request DELETE \
+  --url $url \
+  --header 'Content-Type: application/json' \
+  --data "@./input/findOfcQuery.json"
+n=$(cat ./output/test-63.result.json \
+  | jq --raw-output '.n')
+ok=$(cat ./output/test-63.result.json \
+  | jq --raw-output '.ok')
+if [ "$n" == "$expected01" ] && [ $ok == $expected02 ];
+then printf "${G}SUCCESS...$n and $ok${C}\n";
+else printf "${R}FAILURE...$expected01 != $n and $expected02 != $ok${C}\n";
+fi
+
+# send a request to a bad url
+printf "${P}Test #64:${C} GET $url/id/nonexistence..."
+expected01=3
+expected02=1
+curl --silent -o ./output/test-64.result.json \
+  --request GET \
+  --url $url/id/nonexistence
+n=$(cat ./output/test-64.result.json \
+  | jq --raw-output '.n')
+ok=$(cat ./output/test-64.result.json \
+  | jq --raw-output '.ok')
+if [ "$n" == "$expected01" ] && [ $ok == $expected02 ];
+then printf "${G}SUCCESS...$n and $ok${C}\n";
+else printf "${R}FAILURE...$expected01 != $n and $expected02 != $ok${C}\n";
+fi

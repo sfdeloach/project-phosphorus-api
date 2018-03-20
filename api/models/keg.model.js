@@ -20,16 +20,28 @@ class Keg {
     return new Promise((resolve, reject) => {
       if (parameter.length === 11 &&
         /^[0-9]+$/g.test(parameter)) {
-        this.query = { 'call.eventNbr': +parameter };
+        this.query = {
+          'call.eventNbr': +parameter
+        };
       } else if (parameter.length === 24 &&
         /^[a-fA-F0-9]+$/g.test(parameter)) {
-        this.query = { '_id': parameter };
+        this.query = {
+          '_id': parameter
+        };
       } else if (parameter.length === 3 &&
         /^[0-9]+$/g.test(parameter)) {
-        this.query = { 'deptID': +parameter };
+        this.query = {
+          'deptID': +parameter
+        };
+      } else if (parameter.length === 1 &&
+        /[a-dgs-u]/g.test(parameter)) {
+        this.query = {
+          'squad': this.getSquad(parameter)
+        };
       } else {
         this.query = 'malformed';
-        reject(`parameter '${parameter}' must be an ObjectID or eventNbr`);
+        reject(new Error(`parameter '${parameter}' is not an event, objectID,` +
+          ` deptID, or squad`));
       }
       resolve();
     });
@@ -48,9 +60,27 @@ class Keg {
       } else if (typeof this.query._id === 'string') {
         mongoObjectIDs.push(this.ObjectID(this.query._id));
       }
-      this.query = { '_id': { '$in': mongoObjectIDs } };
+      this.query = {
+        '_id': {
+          '$in': mongoObjectIDs
+        }
+      };
     }
     return;
+  }
+
+  getSquad(letter) {
+    const phonetics = {
+      a: 'Alpha',
+      b: 'Bravo',
+      c: 'Charlie',
+      d: 'Delta',
+      g: 'Uptown/Gateway',
+      s: 'Street Crimes',
+      t: 'Traffic',
+      u: 'Uptown/Gateway'
+    };
+    return phonetics[letter];
   }
 }
 

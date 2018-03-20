@@ -40,10 +40,10 @@ app.all('/*', (req, res) => {
   logger.reportError('app route not found');
   keg = new Keg('not found');
   res.json(new ErrJsonRes(
-    logger.message(req), 'app route not found', keg
+    logger.message(req), new Error('app route not found'), keg
   ));
 });
 
 app.listen(3000, () => {
-  console.log(`${new Date().toISOString()} - Phosphorus API listening on port 3000!`);
+  logger.startup();
 });

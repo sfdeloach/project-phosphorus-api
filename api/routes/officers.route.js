@@ -19,7 +19,7 @@ router.use((req, res, next) => {
 /*
   api/officers/
   return all officers based on req.body.query (defaults {})
-  TEST #53 and TODO test query
+  TEST #53 and #59
 */
 router.get('/', (req, res) => {
   keg.query = req.body.query || {};
@@ -57,10 +57,10 @@ router.get('/:id', (req, res) => {
 /*
   api/officers/squad/:squad
   return all officers assigned to :squad
-  NOT TESTED
+  TEST #60
 */
 router.get('/squad/:squad', (req, res) => {
-  keg.setQueryById(req.params.id, req, res)
+  keg.setQueryById(req.params.squad, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
@@ -141,7 +141,7 @@ router.put('/deptID/:deptID', (req, res) => {
 /*
   api/officers/
   deletes officers matching query, defaults to {} if query not provided
-  TEST #50 and ??? TODO: query test
+  TEST #50 and #63
 */
 router.delete('/', (req, res) => {
   keg.query = req.body.query || {};
@@ -160,7 +160,7 @@ router.delete('/', (req, res) => {
 /*
   api/officers/:id
   delete one officer by :id = officer._id
-  NOT TESTED
+  TEST #61
 */
 router.delete('/:id', (req, res) => {
   keg.setQueryById(req.params.id, req, res)
@@ -179,10 +179,10 @@ router.delete('/:id', (req, res) => {
 /*
   api/officers/deptID/:deptID
   delete one officer by deptID
-  NOT TESTED
+  TEST #62
 */
 router.delete('/deptID/:deptID', (req, res) => {
-  keg.setQueryById(req.params.id, req, res)
+  keg.setQueryById(req.params.deptID, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.remove(keg))
     .then(keg => res.json(keg.removeResult))
