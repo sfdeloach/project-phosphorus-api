@@ -41,7 +41,7 @@ router.get('/', (req, res) => {
   TEST #55
 */
 router.get('/:id', (req, res) => {
-  keg.setQueryById(req.params.id, req, res)
+  keg.formQuery(req.params.id, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
@@ -60,7 +60,7 @@ router.get('/:id', (req, res) => {
   TEST #60
 */
 router.get('/squad/:squad', (req, res) => {
-  keg.setQueryById(req.params.squad, req, res)
+  keg.formQuery(req.params.squad, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
@@ -97,13 +97,33 @@ router.post('/', (req, res) => {
 /* Create - PUT ***************************************************************/
 
 /*
+  api/officers/include
+  update the include boolean for every officer based on squad
+  NOT TESTED
+*/
+router.put('/include', (req, res) => {
+  keg.query = req.body.query;
+  keg.doc = req.body.update;
+  command.connect(keg)
+    .then(keg => command.update(keg))
+    .then(keg => res.json(keg.updateResult))
+    .catch(err => {
+      delete keg.client;
+      logger.reportError(err);
+      res.json(new ErrJsonRes(
+        logger.message(req), err, keg
+      ));
+    });
+});
+
+/*
   api/officers/:id
   replace one officer by :id = officer._id
   TEST #56
 */
 router.put('/:id', (req, res) => {
   keg.doc = req.body.officer;
-  keg.setQueryById(req.params.id, req, res)
+  keg.formQuery(req.params.id, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.replaceOne(keg))
     .then(keg => res.json(keg.replaceOneResult))
@@ -123,7 +143,7 @@ router.put('/:id', (req, res) => {
 */
 router.put('/deptID/:deptID', (req, res) => {
   keg.doc = req.body.officer;
-  keg.setQueryById(req.params.deptID, req, res)
+  keg.formQuery(req.params.deptID, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.replaceOne(keg))
     .then(keg => res.json(keg.replaceOneResult))
@@ -163,7 +183,7 @@ router.delete('/', (req, res) => {
   TEST #61
 */
 router.delete('/:id', (req, res) => {
-  keg.setQueryById(req.params.id, req, res)
+  keg.formQuery(req.params.id, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.remove(keg))
     .then(keg => res.json(keg.removeResult))
@@ -182,7 +202,7 @@ router.delete('/:id', (req, res) => {
   TEST #62
 */
 router.delete('/deptID/:deptID', (req, res) => {
-  keg.setQueryById(req.params.deptID, req, res)
+  keg.formQuery(req.params.deptID, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.remove(keg))
     .then(keg => res.json(keg.removeResult))

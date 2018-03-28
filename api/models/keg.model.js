@@ -16,7 +16,7 @@ class Keg {
   /*
     sets query from a parameter that is either an event number or object ID
   */
-  setQueryById(parameter, req, res) {
+  formQuery(parameter, req, res) {
     return new Promise((resolve, reject) => {
       if (parameter.length === 11 &&
         /^[0-9]+$/g.test(parameter)) {
@@ -40,8 +40,8 @@ class Keg {
         };
       } else {
         this.query = 'malformed';
-        reject(new Error(`parameter '${parameter}' is not an event, objectID,` +
-          ` deptID, or squad`));
+        reject(new Error(`unable to form a query, the parameter '${parameter}'` +
+          ` is not an event, objectID, deptID, or squad`));
       }
       resolve();
     });

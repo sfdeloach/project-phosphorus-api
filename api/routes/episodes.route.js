@@ -122,7 +122,7 @@ router.get('/call/primaryUnit/deptID/:deptID', (req, res) => {
   TEST #14
 */
 router.get('/:id', (req, res) => {
-  keg.setQueryById(req.params.id, req, res)
+  keg.formQuery(req.params.id, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
@@ -163,7 +163,7 @@ router.post('/', (req, res) => {
 */
 router.post('/call/units/:id', (req, res) => {
   keg.doc = { '$push': { 'call.units': req.body.officer } };
-  keg.setQueryById(req.params.id, req, res)
+  keg.formQuery(req.params.id, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.update(keg))
     .then(keg => res.json(keg.updateResult))
@@ -183,7 +183,7 @@ router.post('/call/units/:id', (req, res) => {
 */
 router.post('/reports/:id', (req, res) => {
   keg.doc = { '$push': { 'reports': req.body.report } };
-  keg.setQueryById(req.params.id, req, res)
+  keg.formQuery(req.params.id, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.update(keg))
     .then(keg => res.json(keg.updateResult))
@@ -205,7 +205,7 @@ router.post('/reports/:id', (req, res) => {
 */
 router.put('/:id', (req, res) => {
   keg.doc = req.body.episode;
-  keg.setQueryById(req.params.id, req, res)
+  keg.formQuery(req.params.id, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.replaceOne(keg))
     .then(keg => res.json(keg.replaceOneResult))
@@ -245,7 +245,7 @@ router.delete('/', (req, res) => {
   TEST #17
 */
 router.delete('/:id', (req, res) => {
-  keg.setQueryById(req.params.id, req, res)
+  keg.formQuery(req.params.id, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.remove(keg))
     .then(keg => res.json(keg.removeResult))
@@ -265,7 +265,7 @@ router.delete('/:id', (req, res) => {
 */
 router.delete('/call/units/:id/:deptID', (req, res) => {
   keg.doc = { '$pull': { 'call.units': { 'deptID': +req.params.deptID } } };
-  keg.setQueryById(req.params.id, req, res)
+  keg.formQuery(req.params.id, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.update(keg))
     .then(keg => res.json(keg.updateResult))
