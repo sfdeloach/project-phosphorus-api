@@ -98,7 +98,8 @@ router.post('/', (req, res) => {
 
 /*
   api/officers/include
-  update the include boolean for every officer based on squad
+  offices mathing 'query' will received 'update'
+  used in officer.http.service by updateSquadAssignments()
   NOT TESTED
 */
 router.put('/include', (req, res) => {
