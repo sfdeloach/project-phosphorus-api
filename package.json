@@ -24,6 +24,7 @@
     "mongodb": "^3.0.1"
   },
   "devDependencies": {
-    "@angular/cli": "^1.7.4"
+    "@angular/cli": "^1.7.4",
+    "eslint-config-google": "^0.9.1"
   }
 }
