@@ -23,15 +23,14 @@ router.use((req, res, next) => {
 */
 router.get('/', (req, res) => {
   keg.query = req.body.query || {};
-  command.connect(keg)
+  command
+    .connect(keg)
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
     .catch(err => {
       delete keg.client;
       logger.reportError(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
     });
 });
 
@@ -47,15 +46,14 @@ router.get('/call/created/:from/:to', (req, res) => {
       $lt: req.params.to + 'T23:59:59.999Z'
     }
   };
-  command.connect(keg)
+  command
+    .connect(keg)
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
     .catch(err => {
       delete keg.client;
       logger.reportError(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
     });
 });
 
@@ -66,15 +64,14 @@ router.get('/call/created/:from/:to', (req, res) => {
 */
 router.get('/call/eventNbr/:eventNbr', (req, res) => {
   keg.query = { 'call.eventNbr': +req.params.eventNbr };
-  command.connect(keg)
+  command
+    .connect(keg)
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
     .catch(err => {
       delete keg.client;
       logger.reportError(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
     });
 });
 
@@ -85,15 +82,14 @@ router.get('/call/eventNbr/:eventNbr', (req, res) => {
 */
 router.get('/reports/caseNbr/:caseNbr', (req, res) => {
   keg.query = { 'reports.caseNbr': req.params.caseNbr };
-  command.connect(keg)
+  command
+    .connect(keg)
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
     .catch(err => {
       delete keg.client;
       logger.reportError(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
     });
 });
 
@@ -104,15 +100,14 @@ router.get('/reports/caseNbr/:caseNbr', (req, res) => {
 */
 router.get('/call/primaryUnit/deptID/:deptID', (req, res) => {
   keg.query = { 'call.primaryUnit.deptID': +req.params.deptID };
-  command.connect(keg)
+  command
+    .connect(keg)
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
     .catch(err => {
       delete keg.client;
       logger.reportError(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
     });
 });
 
@@ -122,16 +117,15 @@ router.get('/call/primaryUnit/deptID/:deptID', (req, res) => {
   TEST #14
 */
 router.get('/:id', (req, res) => {
-  keg.formQuery(req.params.id, req, res)
+  keg
+    .formQuery(req.params.id, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.find(keg))
     .then(keg => res.json(keg.findResult))
     .catch(err => {
       delete keg.client;
       logger.reportError(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
     });
 });
 
@@ -144,15 +138,14 @@ router.get('/:id', (req, res) => {
 */
 router.post('/', (req, res) => {
   keg.documents = req.body.episodes;
-  command.connect(keg)
+  command
+    .connect(keg)
     .then(keg => command.insertMany(keg))
     .then(keg => res.json(keg.insertManyResult))
     .catch(err => {
       delete keg.client;
       logger.reportError(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
     });
 });
 
@@ -162,17 +155,16 @@ router.post('/', (req, res) => {
   TEST #4 and TEST #5 PASS
 */
 router.post('/call/units/:id', (req, res) => {
-  keg.doc = { '$push': { 'call.units': req.body.officer } };
-  keg.formQuery(req.params.id, req, res)
+  keg.doc = { $push: { 'call.units': req.body.officer } };
+  keg
+    .formQuery(req.params.id, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.update(keg))
     .then(keg => res.json(keg.updateResult))
     .catch(err => {
       delete keg.client;
       logger.reportError(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
     });
 });
 
@@ -182,17 +174,16 @@ router.post('/call/units/:id', (req, res) => {
   TEST #6 and TEST #7 PASS
 */
 router.post('/reports/:id', (req, res) => {
-  keg.doc = { '$push': { 'reports': req.body.report } };
-  keg.formQuery(req.params.id, req, res)
+  keg.doc = { $push: { reports: req.body.report } };
+  keg
+    .formQuery(req.params.id, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.update(keg))
     .then(keg => res.json(keg.updateResult))
     .catch(err => {
       delete keg.client;
       logger.reportError(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
     });
 });
 
@@ -205,16 +196,15 @@ router.post('/reports/:id', (req, res) => {
 */
 router.put('/:id', (req, res) => {
   keg.doc = req.body.episode;
-  keg.formQuery(req.params.id, req, res)
+  keg
+    .formQuery(req.params.id, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.replaceOne(keg))
     .then(keg => res.json(keg.replaceOneResult))
     .catch(err => {
       delete keg.client;
       logger.reportError(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
     });
 });
 
@@ -227,15 +217,14 @@ router.put('/:id', (req, res) => {
 */
 router.delete('/', (req, res) => {
   keg.query = req.body.query || {};
-  command.connect(keg)
+  command
+    .connect(keg)
     .then(keg => command.remove(keg))
     .then(keg => res.json(keg.removeResult))
     .catch(err => {
       delete keg.client;
       logger.reportError(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
     });
 });
 
@@ -245,16 +234,15 @@ router.delete('/', (req, res) => {
   TEST #17
 */
 router.delete('/:id', (req, res) => {
-  keg.formQuery(req.params.id, req, res)
+  keg
+    .formQuery(req.params.id, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.remove(keg))
     .then(keg => res.json(keg.removeResult))
     .catch(err => {
       delete keg.client;
       logger.reportError(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
     });
 });
 
@@ -264,17 +252,16 @@ router.delete('/:id', (req, res) => {
   TEST #19 and TEST #20
 */
 router.delete('/call/units/:id/:deptID', (req, res) => {
-  keg.doc = { '$pull': { 'call.units': { 'deptID': +req.params.deptID } } };
-  keg.formQuery(req.params.id, req, res)
+  keg.doc = { $pull: { 'call.units': { deptID: +req.params.deptID } } };
+  keg
+    .formQuery(req.params.id, req, res)
     .then(() => command.connect(keg))
     .then(keg => command.update(keg))
     .then(keg => res.json(keg.updateResult))
     .catch(err => {
       delete keg.client;
       logger.reportError(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
     });
 });
 
@@ -290,15 +277,14 @@ router.delete('/call/created/:from/:to', (req, res) => {
       $lt: req.params.to + 'T23:59:59.999Z'
     }
   };
-  command.connect(keg)
+  command
+    .connect(keg)
     .then(keg => command.remove(keg))
     .then(keg => res.json(keg.removeResult))
     .catch(err => {
       delete keg.client;
       logger.reportError(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
     });
 });
 
@@ -309,16 +295,15 @@ router.delete('/call/created/:from/:to', (req, res) => {
 */
 router.delete('/reports/caseNbr/:caseNbr', (req, res) => {
   keg.query = { 'reports.caseNbr': req.params.caseNbr };
-  keg.doc = { '$pull': { 'reports': { 'caseNbr': req.params.caseNbr } } };
-  command.connect(keg)
+  keg.doc = { $pull: { reports: { caseNbr: req.params.caseNbr } } };
+  command
+    .connect(keg)
     .then(keg => command.update(keg))
     .then(keg => res.json(keg.updateResult))
     .catch(err => {
       delete keg.client;
       logger.reportError(err);
-      res.json(new ErrJsonRes(
-        logger.message(req), err, keg
-      ));
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
     });
 });
 

@@ -8,6 +8,8 @@ const app = express();
 
 const episodes = require('./api/routes/episodes.route');
 const officers = require('./api/routes/officers.route');
+const reports = require('./api/routes/reports.route');
+const users = require('./api/routes/users.route');
 
 const logger = require('./api/assets/logger.utility');
 const ErrJsonRes = require('./api/models/error.response.model.js');
@@ -33,6 +35,8 @@ app.use(function (req, res, next) {
 // Routing configuration
 app.use('/api/episodes', episodes);
 app.use('/api/officers', officers);
+app.use('/api/reports', reports);
+app.use('/api/users', users);
 
 // Wildcard route
 app.all('/*', (req, res) => {
