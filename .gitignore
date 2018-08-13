@@ -4,6 +4,7 @@
 /dist
 /tmp
 /out-tsc
+nohup.out
 
 # test results
 /api/tests/output/test-*.result.json
