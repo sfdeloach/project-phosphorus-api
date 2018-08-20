@@ -34,6 +34,24 @@ router.get('/', (req, res) => {
     });
 });
 
+/*
+  api/reports/:id
+  return one report by :id = report._id
+  ** NOT TESTED **
+*/
+router.get('/:id', (req, res) => {
+  keg
+    .formQuery(req.params.id, req, res)
+    .then(() => command.connect(keg))
+    .then(keg => command.find(keg))
+    .then(keg => res.json(keg.findResult))
+    .catch(err => {
+      delete keg.client;
+      logger.reportError(err);
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
+    });
+});
+
 /* Create - POST **************************************************************/
 
 /*
