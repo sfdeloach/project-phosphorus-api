@@ -63,8 +63,28 @@ router.post('/', (req, res) => {
   keg.documents = req.body.users;
   command
     .connect(keg)
-    .then(keg => command.insertMany(keg))
+    .then(keg => command.insertMany(keg)) // new command createUser
     .then(keg => res.json(keg.insertManyResult))
+    .catch(err => {
+      delete keg.client;
+      logger.reportError(err);
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
+    });
+});
+
+/*
+  api/users/login/:username
+  authenticate the username, return user info if successful, else return error
+  ** NOT TESTED **
+*/
+router.post('/login/:username', (req, res) => {
+  keg.user = req.body;
+  command
+    .connect(keg)
+    .then(keg => command.verifyUser(keg))
+    .then(keg => {
+      res.json(keg.findResult);
+    })
     .catch(err => {
       delete keg.client;
       logger.reportError(err);
