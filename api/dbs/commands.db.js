@@ -1,7 +1,7 @@
 const mongodb = require('mongodb');
 const MongoClient = require('mongodb').MongoClient;
-
 const url = 'mongodb://localhost:27017';
+const argon2 = require('argon2');
 
 let getCollection = keg => {
   return keg.client.db('phosphorus').collection(keg.collection);
@@ -79,18 +79,50 @@ let dbOperationCommands = {
           username: keg.user.username
         },
         (err, findResult) => {
-          if (err) reject(err);
-          // TODO: will need to use hash comparison function here
-          if (findResult && findResult.password === keg.user.password) {
-            keg.findResult = findResult;
+          if (err) {
+            reject(err);
+          } else if (findResult) {
+            argon2.verify(findResult.password, keg.user.password).then(match => {
+              if (match) {
+                keg.findResult = findResult;
+                resolve(keg);
+              } else {
+                keg.findResult = undefined;
+                resolve(keg);
+              }
+            });
+          } else {
+            keg.findResult = undefined;
+            resolve(keg);
           }
-          resolve(keg);
         }
       );
     });
   },
   createUser: keg => {
-    // TODO similar to insertMany, but needs to hash password
+    return new Promise((resolve, reject) => {
+      const hashOptions = {
+        timeCost: 4,
+        memoryCost: 2 ** 14,
+        parallelism: 2,
+        type: argon2.argon2id
+      };
+      argon2
+        .hash(keg.user.password, hashOptions)
+        .then(hash => {
+          keg.user.password = hash;
+          getCollection(keg).insertOne(keg.user, (err, insertOneResult) => {
+            if (err) reject(err);
+            keg.insertOneResult = insertOneResult;
+            resolve(keg);
+          });
+        })
+        .catch(err => {
+          console.error('A problem occurred during argon2 hash.');
+          console.error(err);
+          reject(err);
+        });
+    });
   }
 };
 

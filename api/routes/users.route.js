@@ -56,15 +56,16 @@ router.get('/:id', (req, res) => {
 
 /*
   api/users/
-  insert one or many users, users must be an array
+  hash the password and insert one user in db,
+  'keg.user' is a User object, not an array
   ** NOT TESTED **
 */
 router.post('/', (req, res) => {
-  keg.documents = req.body.users;
+  keg.user = req.body.user;
   command
     .connect(keg)
-    .then(keg => command.insertMany(keg)) // TODO: new command createUser
-    .then(keg => res.json(keg.insertManyResult))
+    .then(keg => command.createUser(keg))
+    .then(keg => res.json(keg.insertOneResult))
     .catch(err => {
       delete keg.client;
       logger.reportError(err);

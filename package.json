@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/sfdeloach/project-phosphorus-api#readme",
   "dependencies": {
+    "argon2": "^0.19.3",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "mongodb": "^3.0.1"
