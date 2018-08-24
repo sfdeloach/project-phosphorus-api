@@ -30,7 +30,7 @@ router.get('/', (req, res) => {
     .catch(err => {
       delete keg.client;
       logger.reportError(err);
-      res.json(new ErrJsonRes(logger.message(req), err, keg));
+      res.json([new ErrJsonRes(logger.message(req), err, keg)]);
     });
 });
 
@@ -63,7 +63,7 @@ router.post('/', (req, res) => {
   keg.documents = req.body.users;
   command
     .connect(keg)
-    .then(keg => command.insertMany(keg)) // new command createUser
+    .then(keg => command.insertMany(keg)) // TODO: new command createUser
     .then(keg => res.json(keg.insertManyResult))
     .catch(err => {
       delete keg.client;

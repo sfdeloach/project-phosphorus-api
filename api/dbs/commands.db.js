@@ -88,6 +88,9 @@ let dbOperationCommands = {
         }
       );
     });
+  },
+  createUser: keg => {
+    // TODO similar to insertMany, but needs to hash password
   }
 };
 
