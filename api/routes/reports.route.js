@@ -72,6 +72,27 @@ router.post('/', (req, res) => {
     });
 });
 
+/* Create - PUT ***************************************************************/
+
+/*
+  api/reports/:id
+  update the title of a report
+  ** NOT TESTED **
+*/
+router.put('/:id', (req, res) => {
+  keg.title = req.body.title;
+  keg
+    .formQuery(req.params.id, req, res)
+    .then(() => command.connect(keg))
+    .then(keg => command.updateTitle(keg))
+    .then(keg => res.json(keg.updateResult))
+    .catch(err => {
+      delete keg.client;
+      logger.reportError(err);
+      res.json(new ErrJsonRes(logger.message(req), err, keg));
+    });
+});
+
 /* Create - DELETE ************************************************************/
 
 /*

@@ -72,6 +72,20 @@ let dbOperationCommands = {
       });
     });
   },
+  updateTitle: keg => {
+    return new Promise((resolve, reject) => {
+      keg.convertIdToObject();
+      getCollection(keg).update(
+        keg.query,
+        { $set: { 'meta.title': keg.title } },
+        (err, updateResult) => {
+          if (err) reject(err);
+          keg.updateResult = updateResult;
+          resolve(keg);
+        }
+      );
+    });
+  },
   verifyUser: keg => {
     return new Promise((resolve, reject) => {
       getCollection(keg).findOne(
